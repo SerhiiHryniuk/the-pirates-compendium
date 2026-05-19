@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Pirates Compendium - Skill list</title>
+  <title>The Pirates Compendium - Skill creator</title>
 </head>
 <body>
   <h1>The Pirates Compendium</h1>
-  <h2>Skill list</h2>
+  <h2>Skill creator</h2>
   {% if user.is_authenticated %}
     <p>User: {{ user.username }}</p>
     <form action="{% url "logout" %}" method=post>
@@ -14,7 +14,6 @@
       <input type="hidden" name="next" value="{{ request.path }}" />
       <button type="submit">Logout</button>
     </form>
-    <a href="{% url "compendium:skill_create" %}">Add skill</a>
   {% else %}
     <a href="{% url "login" %}">Login</a>
   {% endif %}
@@ -22,16 +21,10 @@
   <a href="{% url "compendium:index" %}">Home</a>
   <br>
   <a href="{% url "compendium:skill_list" %}">Skills</a>
-  {% if skill_list %}
-    <ul>
-      {% for skill in skill_list %}
-        <li>
-          <p>{{ skill }}</p>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No skills yet.</p>
-  {% endif %}
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+  </form>
 </body>
 </html>
