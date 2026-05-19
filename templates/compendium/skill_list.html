@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Pirates Compendium</title>
+  <title>The Pirates Compendium - Skill list</title>
 </head>
 <body>
   <h1>The Pirates Compendium</h1>
+  <h2>Skill list</h2>
   {% if user.is_authenticated %}
     <p>User: {{ user.username }}</p>
     <form action="{% url "logout" %}" method=post>
@@ -20,5 +21,16 @@
   <a href="{% url "compendium:index" %}">Home</a>
   <br>
   <a href="{% url "compendium:skill_list" %}">Skills</a>
+  {% if skill_list %}
+    <ul>
+      {% for skill in skill_list %}
+        <li>
+          <p>{{ skill }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No skills yet.</p>
+  {% endif %}
 </body>
 </html>
