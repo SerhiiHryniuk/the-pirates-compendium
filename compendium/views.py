@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView
+from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
 
 from compendium.models import Skill
 
@@ -35,5 +35,11 @@ class SkillUpdateView(UpdateView):
     model = Skill
     fields = ['name', 'slug', 'description', 'dmg_dice', 'skill_type']
     template_name = 'compendium/skill_form.html'
+    success_url = reverse_lazy('compendium:skill_list')
+
+
+class SkillDeleteView(DeleteView):
+    model = Skill
+    template_name = 'compendium/skill_delete.html'
     success_url = reverse_lazy('compendium:skill_list')
 
