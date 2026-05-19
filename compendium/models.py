@@ -32,6 +32,7 @@ class Skill(models.Model):
         max_length=10,
         choices=SkillType.choices
     )
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="skills")
 
 
 class DevilFruit(models.Model):
@@ -45,6 +46,7 @@ class DevilFruit(models.Model):
     image = models.ImageField(upload_to='images/devil_fruits/')
     view_count = models.PositiveIntegerField(default=0)
     skills = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="devil_fruits")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="devil_fruits")
 
 
 class Monster(models.Model):
