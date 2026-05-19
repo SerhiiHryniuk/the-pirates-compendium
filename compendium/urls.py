@@ -1,10 +1,9 @@
 from django.urls import path
 
-from compendium.views import index
-
+from compendium.views import IndexView
 
 app_name = "compendium"
 
 urlpatterns = [
-    path("", index, name="index"),
+    path("", IndexView.as_view(), name="index"),
 ]

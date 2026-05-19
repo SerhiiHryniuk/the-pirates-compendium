@@ -120,6 +120,8 @@ STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = 'compendium.User'
 
+LOGIN_REDIRECT_URL = '/compendium/'
+
 MEDIA_ROOT = BASE_DIR / 'media'
 
 MEDIA_URL = '/media/'

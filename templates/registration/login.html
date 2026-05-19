@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+{% if form.error %}
+  <p style="color: red">Invalid credentials</p>
+{% endif %}
+<form action="{% url 'login' %}" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input class="btn btn-primary" type="submit" value="Submit">
+  <input type="hidden" name="next" value="{{ next }}">
+</form>
+</body>
+</html>
