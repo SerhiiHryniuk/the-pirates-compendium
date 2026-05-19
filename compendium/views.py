@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, CreateView
+from django.views.generic import TemplateView, ListView, CreateView, DetailView
 
 from compendium.models import Skill
 
@@ -12,6 +12,12 @@ class SkillListView(ListView):
     model = Skill
     template_name = 'compendium/skill_list.html'
     context_object_name = 'skill_list'
+
+
+class SkillDetailView(DetailView):
+    model = Skill
+    template_name = 'compendium/skill_detail.html'
+    context_object_name = 'skill_detail'
 
 
 class SkillCreateView(CreateView):
