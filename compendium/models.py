@@ -34,6 +34,9 @@ class Skill(models.Model):
     )
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="skills")
 
+    def __str__(self):
+        return f"{self.name}: {self.dmg_dice}, {self.skill_type}, {self.description[:25]}..."
+
 
 class DevilFruit(models.Model):
     name = models.CharField(max_length=255)
