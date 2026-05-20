@@ -96,12 +96,17 @@ class Monster(models.Model):
 
 class Scenario(models.Model):
     title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
     description = models.TextField()
     starting_hook = models.TextField()
     view_count = models.PositiveIntegerField(default=0)
     monsters = models.ManyToManyField(Monster, related_name="scenarios")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="scenarios")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.title}: {self.description[:25]}..."

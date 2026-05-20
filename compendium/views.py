@@ -149,7 +149,7 @@ class ScenarioListView(ListView):
 
 class ScenarioCreateView(CreateView):
     model = Scenario
-    fields = ['title', 'slug', 'description', 'starting_hook', 'monsters']
+    fields = ['title', 'description', 'starting_hook', 'monsters']
     template_name = 'compendium/scenario_form.html'
     success_url = reverse_lazy('compendium:scenario_list')
 
@@ -172,7 +172,7 @@ class ScenarioDetailView(DetailView):
 
 class ScenarioUpdateView(UpdateView):
     model = Scenario
-    fields = ['title', 'slug', 'description', 'starting_hook', 'monsters']
+    fields = ['title', 'description', 'starting_hook', 'monsters']
     template_name = 'compendium/scenario_form.html'
     success_url = reverse_lazy('compendium:scenario_list')
 
