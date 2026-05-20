@@ -34,7 +34,7 @@ class SkillCreateView(CreateView):
 
 class SkillUpdateView(UpdateView):
     model = Skill
-    fields = ['name', 'slug', 'description', 'dmg_dice', 'skill_type']
+    fields = ['name', 'description', 'dmg_dice', 'skill_type']
     template_name = 'compendium/skill_form.html'
     success_url = reverse_lazy('compendium:skill_list')
 
