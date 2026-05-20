@@ -14,7 +14,7 @@
       <input type="hidden" name="next" value="{{ request.path }}" />
       <button type="submit">Logout</button>
     </form>
-    <a href="{% url "compendium:devil_fruit_create" %}">Add devil fruit</a>
+    <a href="{% url "compendium:monster_create" %}">Add monster</a>
   {% else %}
     <a href="{% url "login" %}">Login</a>
   {% endif %}

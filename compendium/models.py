@@ -75,6 +75,8 @@ class Monster(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="monsters")
     skills = models.ManyToManyField(Skill, related_name="monsters")
 
+    def __str__(self):
+        return f"{self.name}: {self.description[:25]}..."
 
 class Scenario(models.Model):
     title = models.CharField(max_length=255)

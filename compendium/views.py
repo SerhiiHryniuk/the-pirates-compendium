@@ -97,3 +97,20 @@ class MonsterListView(ListView):
     model = Monster
     template_name = 'compendium/monster_list.html'
     context_object_name = 'monster_list'
+
+
+class MonsterCreateView(CreateView):
+    model = Monster
+    fields = ['name', 'slug', 'description', 'origin', 'image', 'health_points', 'armor_class', 'challenge_rating', 'speed', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'skills']
+    template_name = 'compendium/monster_form.html'
+    success_url = reverse_lazy('compendium:monster_list')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['skills'].widget = forms.CheckboxSelectMultiple()
+        form.fields['skills'].queryset = Skill.objects.all()
+        return form
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
