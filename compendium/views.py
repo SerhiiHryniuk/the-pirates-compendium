@@ -1,3 +1,4 @@
+from django import forms
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
 
@@ -49,3 +50,19 @@ class DevilFruitListView(ListView):
     template_name = 'compendium/devil_fruit_list.html'
     context_object_name = 'devil_fruit_list'
 
+
+class DevilFruitCreateView(CreateView):
+    model = DevilFruit
+    fields = ['name', 'slug', 'fruit_type', 'description', 'image', 'skills']
+    template_name = 'compendium/devil_fruit_form.html'
+    success_url = reverse_lazy('compendium:devil_fruit_list')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['skills'].widget = forms.CheckboxSelectMultiple()
+        form.fields['skills'].queryset = Skill.objects.all()
+        return form
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)

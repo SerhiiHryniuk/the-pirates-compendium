@@ -3,14 +3,14 @@ from django.db import models
 
 
 class SkillType(models.TextChoices):
-    ATTACK = "Attack",
-    PASSIVE = "Passive",
+    ATTACK = "Attack"
+    PASSIVE = "Passive"
     SPECIAl = "Special"
 
 
 class DevilFruitType(models.TextChoices):
-    LOGIA = "Logia",
-    PARAMECIA = "Paramecia",
+    LOGIA = "Logia"
+    PARAMECIA = "Paramecia"
     ZOAN = "Zoan"
 
 
@@ -19,7 +19,7 @@ class User(AbstractUser):
 
 
 class Subscriber(models.Model):
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     subscribed_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -27,7 +27,7 @@ class Skill(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     description = models.TextField()
-    dmg_dice = models.CharField(max_length=63)
+    dmg_dice = models.CharField(max_length=63, blank=True)
     skill_type = models.CharField(
         max_length=10,
         choices=SkillType.choices
@@ -48,7 +48,7 @@ class DevilFruit(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to='images/devil_fruits/')
     view_count = models.PositiveIntegerField(default=0)
-    skills = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="devil_fruits")
+    skills = models.ManyToManyField(Skill, related_name="devil_fruits")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="devil_fruits")
 
     def __str__(self):
