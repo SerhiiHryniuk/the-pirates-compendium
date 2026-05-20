@@ -197,6 +197,66 @@ class MonsterDeleteView(DeleteView):
     success_url = reverse_lazy('compendium:monster_list')
 
 
+class MonsterPdfView(DetailView):
+    model = Monster
+
+    def render_to_response(self, context, **response_kwargs):
+        monster = self.object
+        image_html = ""
+        if monster.image:
+            clean_path = monster.image.path.replace('\\', '/')
+            image_html = f'<img src="file:///{clean_path}" style="max-width: 250px; height: auto; display: block; margin: 10px 0;">'
+        skills_html = "".join([f"<li>{skill.name}</li>" for skill in monster.skills.all()])
+        html_content = f"""
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                </head>
+                <body>
+                    <h1>Monster: {monster.name}</h1>
+                    <p><strong>Origin:</strong> {monster.origin}</p>
+                    <p><strong>Challenge Rating:</strong> {monster.challenge_rating}</p>
+                    <p><strong>Description:</strong> {monster.description}</p>
+
+                    {image_html}
+
+                    <h3>Combat Stats & Attributes:</h3>
+                    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%; max-width: 500px;">
+                        <tr>
+                            <td><strong>Health Points (HP):</strong></td> <td>{monster.health_points}</td>
+                            <td><strong>Armor Class (AC):</strong></td> <td>{monster.armor_class}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Speed:</strong></td> <td>{monster.speed} m.</td>
+                            <td><strong>Strength (STR):</strong></td> <td>{monster.strength}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dexterity (DEX):</strong></td> <td>{monster.dexterity}</td>
+                            <td><strong>Constitution (CON):</strong></td> <td>{monster.constitution}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Intelligence (INT):</strong></td> <td>{monster.intelligence}</td>
+                            <td><strong>Wisdom (WIS):</strong></td> <td>{monster.wisdom}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Charisma (CHA):</strong></td> <td>{monster.charisma}</td>
+                            <td><strong>Views:</strong></td> <td>{monster.view_count}</td>
+                        </tr>
+                    </table>
+
+                    <h3>Skills & Abilities:</h3>
+                    <ul>
+                        {skills_html}
+                    </ul>
+                </body>
+                </html>
+                """
+        pdf_file = HTML(string=html_content).write_pdf()
+        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="monster_{monster.slug}.pdf"'
+        return response
+
+
 class ScenarioListView(ListView):
     model = Scenario
     template_name = 'compendium/scenario_list.html'
