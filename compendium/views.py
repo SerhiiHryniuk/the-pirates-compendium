@@ -117,6 +117,38 @@ class DevilFruitDeleteView(DeleteView):
     success_url = reverse_lazy('compendium:devil_fruit_list')
 
 
+class DevilFruitPdfView(DetailView):
+    model = DevilFruit
+
+    def render_to_response(self, context, **response_kwargs):
+        fruit = self.object
+        image_html = ""
+        if fruit.image:
+            clean_path = fruit.image.path.replace('\\', '/')
+            image_html = f'<img src="file:///{clean_path}" style="max-width: 250px; height: auto; display: block; margin: 10px 0;">'
+        skills_html = "".join([f"<li>{skill.name}</li>" for skill in fruit.skills.all()])
+        html_content = f"""
+        <html>
+        <body>
+            <h1>{fruit.name}</h1>
+            <p>Type: {fruit.fruit_type}</p>
+            <p>Description: {fruit.description}</p>
+
+            {image_html}
+
+            <h3>Skills:</h3>
+            <ul>
+                {skills_html}
+            </ul>
+        </body>
+        </html>
+        """
+        pdf_file = HTML(string=html_content).write_pdf()
+        response = HttpResponse(pdf_file, content_type="application/pdf")
+        response['Content-Disposition'] = f'attachment; filename="skill_{fruit.slug}.pdf"'
+        return response
+
+
 class MonsterListView(ListView):
     model = Monster
     template_name = 'compendium/monster_list.html'
