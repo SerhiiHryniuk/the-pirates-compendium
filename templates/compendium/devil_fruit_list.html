@@ -30,7 +30,7 @@
         <li>
           <img src="{{ devil_fruit.image.url }}" alt="{{ devil_fruit.name }}" width="100">
           <p>{{ devil_fruit }}</p>
-          <a href="{% url "compendium:skill_detail" slug=devil_fruit.slug %}">View devil fruit detail</a>
+          <a href="{% url "compendium:devil_fruit_detail" slug=devil_fruit.slug %}">View devil fruit detail</a>
           <br>
           {% if user.is_authenticated %}
             <a href="{% url "compendium:skill_update" slug=devil_fruit.slug %}">Edit devil fruit detail</a>

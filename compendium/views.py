@@ -66,3 +66,9 @@ class DevilFruitCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class DevilFruitDetailView(DetailView):
+    model = DevilFruit
+    template_name = 'compendium/devil_fruit_detail.html'
+    context_object_name = 'devil_fruit_detail'
