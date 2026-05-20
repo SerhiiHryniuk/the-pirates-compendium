@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Pirates Compendium - Scenario creator</title>
+</head>
+<body>
+  <h1>The Pirates Compendium</h1>
+  <h2>Scenario creator</h2>
+  {% if user.is_authenticated %}
+    <p>User: {{ user.username }}</p>
+    <form action="{% url "logout" %}" method=post>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}" />
+      <button type="submit">Logout</button>
+    </form>
+  {% else %}
+    <a href="{% url "login" %}">Login</a>
+  {% endif %}
+  <br>
+  <a href="{% url "compendium:index" %}">Home</a>
+  <br>
+  <a href="{% url "compendium:skill_list" %}">Skills</a>
+  <br>
+  <a href="{% url "compendium:devil_fruit_list" %}">Devil fruits</a>
+  <br>
+  <a href="{% url "compendium:monster_list" %}">Monsters</a>
+  <br>
+  <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+  </form>
+</body>
+</html>

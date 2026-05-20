@@ -145,3 +145,20 @@ class ScenarioListView(ListView):
     model = Scenario
     template_name = 'compendium/scenario_list.html'
     context_object_name = 'scenario_list'
+
+
+class ScenarioCreateView(CreateView):
+    model = Scenario
+    fields = ['title', 'slug', 'description', 'starting_hook', 'monsters']
+    template_name = 'compendium/scenario_form.html'
+    success_url = reverse_lazy('compendium:scenario_list')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['monsters'].widget = forms.CheckboxSelectMultiple()
+        form.fields['monsters'].queryset = Monster.objects.all()
+        return form
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)

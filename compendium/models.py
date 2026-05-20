@@ -86,3 +86,6 @@ class Scenario(models.Model):
     view_count = models.PositiveIntegerField(default=0)
     monsters = models.ManyToManyField(Monster, related_name="scenarios")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="scenarios")
+
+    def __str__(self):
+        return f"{self.title}: {self.description[:25]}..."
