@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.text import slugify
 
 
 class SkillType(models.TextChoices):
@@ -25,7 +26,7 @@ class Subscriber(models.Model):
 
 class Skill(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
     description = models.TextField()
     dmg_dice = models.CharField(max_length=63, blank=True)
     skill_type = models.CharField(
@@ -33,6 +34,10 @@ class Skill(models.Model):
         choices=SkillType.choices
     )
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="skills")
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name}: {self.dmg_dice}, {self.skill_type}, {self.description[:25]}..."
