@@ -164,6 +164,12 @@ class ScenarioCreateView(CreateView):
         return super().form_valid(form)
 
 
+class ScenarioDetailView(DetailView):
+    model = Scenario
+    template_name = 'compendium/scenario_detail.html'
+    context_object_name = 'scenario_detail'
+
+
 class ScenarioUpdateView(UpdateView):
     model = Scenario
     fields = ['title', 'slug', 'description', 'starting_hook', 'monsters']

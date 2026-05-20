@@ -3,7 +3,7 @@ from django.urls import path
 from compendium.views import IndexView, SkillListView, SkillCreateView, SkillDetailView, SkillUpdateView, \
     SkillDeleteView, DevilFruitListView, DevilFruitCreateView, DevilFruitDetailView, DevilFruitUpdateView, \
     DevilFruitDeleteView, MonsterListView, MonsterCreateView, MonsterDetailView, MonsterUpdateView, MonsterDeleteView, \
-    ScenarioListView, ScenarioCreateView, ScenarioUpdateView
+    ScenarioListView, ScenarioCreateView, ScenarioUpdateView, ScenarioDetailView
 
 app_name = "compendium"
 
@@ -26,5 +26,6 @@ urlpatterns = [
     path("monster/<slug:slug>/delete/", MonsterDeleteView.as_view(), name="monster_delete"),
     path("scenario/", ScenarioListView.as_view(), name="scenario_list"),
     path("scenario/create/", ScenarioCreateView.as_view(), name="scenario_create"),
+    path("scenario/<slug:slug>/", ScenarioDetailView.as_view(), name="scenario_detail"),
     path("scenario/<slug:slug>/update/", ScenarioUpdateView.as_view(), name="scenario_update"),
 ]
