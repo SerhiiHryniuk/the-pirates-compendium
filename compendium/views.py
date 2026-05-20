@@ -114,3 +114,9 @@ class MonsterCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class MonsterDetailView(DetailView):
+    model = Monster
+    template_name = 'compendium/monster_detail.html'
+    context_object_name = 'monster_detail'
