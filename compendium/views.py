@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import F
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -21,6 +22,13 @@ class SkillDetailView(DetailView):
     model = Skill
     template_name = 'compendium/skill_detail.html'
     context_object_name = 'skill_detail'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        obj.view_count = F('view_count') + 1
+        obj.save(update_fields=['view_count'])
+        obj.refresh_from_db()
+        return obj
 
 
 class SkillCreateView(CreateView):

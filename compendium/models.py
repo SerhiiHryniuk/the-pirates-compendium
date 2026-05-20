@@ -34,6 +34,7 @@ class Skill(models.Model):
         choices=SkillType.choices
     )
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="skills")
+    view_count = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.slug:
