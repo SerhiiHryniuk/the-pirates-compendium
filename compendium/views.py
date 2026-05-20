@@ -133,3 +133,9 @@ class MonsterUpdateView(UpdateView):
         form.fields['skills'].widget = forms.CheckboxSelectMultiple()
         form.fields['skills'].queryset = Skill.objects.all()
         return form
+
+
+class MonsterDeleteView(DeleteView):
+    model = Monster
+    template_name = 'compendium/monster_delete.html'
+    success_url = reverse_lazy('compendium:monster_list')
