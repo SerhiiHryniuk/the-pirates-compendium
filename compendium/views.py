@@ -85,3 +85,9 @@ class DevilFruitUpdateView(UpdateView):
         form.fields['skills'].widget = forms.CheckboxSelectMultiple()
         form.fields['skills'].queryset = Skill.objects.all()
         return form
+
+
+class DevilFruitDeleteView(DeleteView):
+    model = DevilFruit
+    template_name = 'compendium/devil_fruit_delete.html'
+    success_url = reverse_lazy('compendium:devil_fruit_list')

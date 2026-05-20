@@ -37,7 +37,7 @@
           {% endif %}
           <br>
           {% if user == devil_fruit.author %}
-            <a href="{% url "compendium:skill_delete" slug=devil_fruit.slug %}">Delete devil fruit</a>
+            <a href="{% url "compendium:devil_fruit_delete" slug=devil_fruit.slug %}">Delete devil fruit</a>
           {% endif %}
         </li>
       {% endfor %}
