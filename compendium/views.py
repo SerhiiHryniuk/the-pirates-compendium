@@ -181,3 +181,9 @@ class ScenarioUpdateView(UpdateView):
         form.fields['monsters'].widget = forms.CheckboxSelectMultiple()
         form.fields['monsters'].queryset = Monster.objects.all()
         return form
+
+
+class ScenarioDeleteView(DeleteView):
+    model = Scenario
+    template_name = 'compendium/scenario_delete.html'
+    success_url = reverse_lazy('compendium:scenario_list')
