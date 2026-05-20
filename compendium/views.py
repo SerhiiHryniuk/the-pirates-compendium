@@ -2,7 +2,7 @@ from django import forms
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
 
-from compendium.models import Skill, DevilFruit
+from compendium.models import Skill, DevilFruit, Monster
 
 
 class IndexView(TemplateView):
@@ -91,3 +91,9 @@ class DevilFruitDeleteView(DeleteView):
     model = DevilFruit
     template_name = 'compendium/devil_fruit_delete.html'
     success_url = reverse_lazy('compendium:devil_fruit_list')
+
+
+class MonsterListView(ListView):
+    model = Monster
+    template_name = 'compendium/monster_list.html'
+    context_object_name = 'monster_list'

@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Pirates Compendium - Devil fruit list</title>
+  <title>The Pirates Compendium - Monster list</title>
 </head>
 <body>
   <h1>The Pirates Compendium</h1>
-  <h2>Devil fruit list</h2>
+  <h2>Monster list</h2>
   {% if user.is_authenticated %}
     <p>User: {{ user.username }}</p>
     <form action="{% url "logout" %}" method=post>
@@ -26,26 +26,26 @@
   <a href="{% url "compendium:devil_fruit_list" %}">Devil fruits</a>
   <br>
   <a href="{% url "compendium:monster_list" %}">Monsters</a>
-  {% if devil_fruit_list %}
+  {% if monster_list %}
     <ul>
-      {% for devil_fruit in devil_fruit_list %}
+      {% for monster in monster_list %}
         <li>
-          <img src="{{ devil_fruit.image.url }}" alt="{{ devil_fruit.name }}" width="100">
-          <p>{{ devil_fruit }}</p>
-          <a href="{% url "compendium:devil_fruit_detail" slug=devil_fruit.slug %}">View devil fruit detail</a>
+          <img src="{{ monster.image.url }}" alt="{{ monster.name }}" width="100">
+          <p>{{ monster }}</p>
+          <a href="{% url "compendium:devil_fruit_detail" slug=monster.slug %}">View monster detail</a>
           <br>
           {% if user.is_authenticated %}
-            <a href="{% url "compendium:devil_fruit_update" slug=devil_fruit.slug %}">Edit devil fruit detail</a>
+            <a href="{% url "compendium:devil_fruit_update" slug=monster.slug %}">Edit monster detail</a>
           {% endif %}
           <br>
-          {% if user == devil_fruit.author %}
-            <a href="{% url "compendium:devil_fruit_delete" slug=devil_fruit.slug %}">Delete devil fruit</a>
+          {% if user == monster.author %}
+            <a href="{% url "compendium:devil_fruit_delete" slug=monster.slug %}">Delete monster fruit</a>
           {% endif %}
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p>No devil fruit yet.</p>
+    <p>No monsters yet.</p>
   {% endif %}
 </body>
 </html>
