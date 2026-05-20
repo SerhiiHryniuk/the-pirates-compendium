@@ -36,11 +36,11 @@
           <a href="{% url "compendium:devil_fruit_detail" slug=scenario.slug %}">View scenario detail</a>
           <br>
           {% if user.is_authenticated %}
-            <a href="{% url "compendium:devil_fruit_update" slug=scenario.slug %}">Edit scenario detail</a>
+            <a href="{% url "compendium:scenario_update" slug=scenario.slug %}">Edit scenario detail</a>
           {% endif %}
           <br>
-          {% if user == devil_fruit.author %}
-            <a href="{% url "compendium:devil_fruit_delete" slug=scenario.slug %}">Delete scenario fruit</a>
+          {% if user == scenario.author %}
+            <a href="{% url "compendium:devil_fruit_delete" slug=scenario.slug %}">Delete scenario</a>
           {% endif %}
         </li>
       {% endfor %}
