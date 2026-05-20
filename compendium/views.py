@@ -1,6 +1,8 @@
 from django import forms
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
+from weasyprint import HTML
 
 from compendium.models import Skill, DevilFruit, Monster, Scenario
 
@@ -43,6 +45,28 @@ class SkillDeleteView(DeleteView):
     model = Skill
     template_name = 'compendium/skill_delete.html'
     success_url = reverse_lazy('compendium:skill_list')
+
+
+class SkillPdfView(DetailView):
+    model = Skill
+
+    def render_to_response(self, context, **response_kwargs):
+        skill = self.object
+        html_content = f"""
+                <html>
+                <body>
+                    <h1>Skill: {skill.name}</h1>
+                    <p><strong>Damage:</strong> {skill.dmg_dice}</p>
+                    <p><strong>Type:</strong> {skill.skill_type}</p>
+                    <p><strong>Description:</strong> {skill.description}</p>
+                    <p><strong>Author:</strong> {skill.author.username}</p>
+                </body>
+                </html>
+                """
+        pdf_file = HTML(string=html_content).write_pdf()
+        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="skill_{skill.slug}.pdf"'
+        return response
 
 
 class DevilFruitListView(ListView):
