@@ -72,3 +72,16 @@ class DevilFruitDetailView(DetailView):
     model = DevilFruit
     template_name = 'compendium/devil_fruit_detail.html'
     context_object_name = 'devil_fruit_detail'
+
+
+class DevilFruitUpdateView(UpdateView):
+    model = DevilFruit
+    fields = ['name', 'slug', 'fruit_type', 'description', 'image', 'skills']
+    template_name = 'compendium/devil_fruit_form.html'
+    success_url = reverse_lazy('compendium:devil_fruit_list')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['skills'].widget = forms.CheckboxSelectMultiple()
+        form.fields['skills'].queryset = Skill.objects.all()
+        return form
