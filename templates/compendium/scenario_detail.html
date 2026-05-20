@@ -27,5 +27,8 @@
   <br>
   <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
   <h2>Scenario {{ scenario_detail }}</h2>
+  <a href="{% url "compendium:scenario_pdf" slug=scenario_detail.slug %}" target="_blank">
+    Download PDF
+  </a>
 </body>
 </html>
