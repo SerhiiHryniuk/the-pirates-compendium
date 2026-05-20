@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Pirates Compendium</title>
+  <title>The Pirates Compendium - Skill Delete</title>
 </head>
 <body>
-  <h1>The Pirates Compendium - Delete</h1>
+  <h1>The Pirates Compendium - Skill Delete</h1>
   {% if user.is_authenticated %}
     <p>User: {{ user.username }}</p>
     <form action="{% url "logout" %}" method=post>
@@ -20,6 +20,8 @@
   <a href="{% url "compendium:index" %}">Home</a>
   <br>
   <a href="{% url "compendium:skill_list" %}">Skills</a>
+  <br>
+  <a href="{% url "compendium:devil_fruit_list" %}">Devil fruits</a>
   <h2>Skill: {{ skill.name }}</h2>
   <form action="" method="post">
     {% csrf_token %}

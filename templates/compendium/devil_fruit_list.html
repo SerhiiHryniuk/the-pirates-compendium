@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Pirates Compendium - Skill list</title>
+  <title>The Pirates Compendium - Devil fruit list</title>
 </head>
 <body>
   <h1>The Pirates Compendium</h1>
-  <h2>Skill list</h2>
+  <h2>Devil fruit list</h2>
   {% if user.is_authenticated %}
     <p>User: {{ user.username }}</p>
     <form action="{% url "logout" %}" method=post>
@@ -14,7 +14,7 @@
       <input type="hidden" name="next" value="{{ request.path }}" />
       <button type="submit">Logout</button>
     </form>
-    <a href="{% url "compendium:skill_create" %}">Add skill</a>
+    <a href="{% url "compendium:skill_create" %}">Add devil fruit</a>
   {% else %}
     <a href="{% url "login" %}">Login</a>
   {% endif %}
@@ -28,21 +28,22 @@
     <ul>
       {% for skill in skill_list %}
         <li>
+          <img src="{{ skill.image.url }}" alt="{{ skill.name }}">
           <p>{{ skill }}</p>
-          <a href="{% url "compendium:skill_detail" slug=skill.slug %}">View skill detail</a>
+          <a href="{% url "compendium:skill_detail" slug=skill.slug %}">View devil fruit detail</a>
           <br>
           {% if user.is_authenticated %}
-            <a href="{% url "compendium:skill_update" slug=skill.slug %}">Edit skill detail</a>
+            <a href="{% url "compendium:skill_update" slug=skill.slug %}">Edit devil fruit detail</a>
           {% endif %}
           <br>
           {% if user == skill.author %}
-            <a href="{% url "compendium:skill_delete" slug=skill.slug %}">Delete skill</a>
+            <a href="{% url "compendium:skill_delete" slug=skill.slug %}">Delete devil fruit</a>
           {% endif %}
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p>No skills yet.</p>
+    <p>No devil fruit yet.</p>
   {% endif %}
 </body>
 </html>

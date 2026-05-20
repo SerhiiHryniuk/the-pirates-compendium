@@ -51,6 +51,9 @@ class DevilFruit(models.Model):
     skills = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="devil_fruits")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="devil_fruits")
 
+    def __str__(self):
+        return f"{self.name}: {self.fruit_type}, {self.description[:25]}..."
+
 
 class Monster(models.Model):
     name = models.CharField(max_length=255)
