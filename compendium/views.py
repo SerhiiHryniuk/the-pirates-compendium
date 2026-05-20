@@ -53,7 +53,7 @@ class DevilFruitListView(ListView):
 
 class DevilFruitCreateView(CreateView):
     model = DevilFruit
-    fields = ['name', 'slug', 'fruit_type', 'description', 'image', 'skills']
+    fields = ['name', 'fruit_type', 'description', 'image', 'skills']
     template_name = 'compendium/devil_fruit_form.html'
     success_url = reverse_lazy('compendium:devil_fruit_list')
 
@@ -76,7 +76,7 @@ class DevilFruitDetailView(DetailView):
 
 class DevilFruitUpdateView(UpdateView):
     model = DevilFruit
-    fields = ['name', 'slug', 'fruit_type', 'description', 'image', 'skills']
+    fields = ['name', 'fruit_type', 'description', 'image', 'skills']
     template_name = 'compendium/devil_fruit_form.html'
     success_url = reverse_lazy('compendium:devil_fruit_list')
 
