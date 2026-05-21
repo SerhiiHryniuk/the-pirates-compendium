@@ -286,6 +286,7 @@ class ScenarioListView(ListView):
     model = Scenario
     template_name = 'compendium/scenario_list.html'
     context_object_name = 'scenario_list'
+    paginate_by = 5
 
 
 class ScenarioCreateView(CreateView):
