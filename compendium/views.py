@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models import F
+from django.db.models.sql import query
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -307,6 +308,19 @@ class ScenarioListView(ListView):
         context = super().get_context_data(**kwargs)
         context['top_scenarios'] = Scenario.objects.order_by('-view_count', 'title')[:3]
         return context
+
+
+class SkillSearchView(ListView):
+    model = Skill
+    template_name = 'compendium/skill_search_results.html'
+    context_object_name = 'skill_list'
+    paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        if query:
+            return Skill.objects.filter(name__icontains=query)
+        return Skill.objects.all()
 
 
 class ScenarioCreateView(CreateView):

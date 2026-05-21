@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>The Pirates Compendium - Skill list</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 <body>
   <h1>The Pirates Compendium</h1>
@@ -36,34 +37,47 @@
   <a href="{% url "compendium:monster_list" %}">Monsters</a>
   <br>
   <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
-  {% if skill_list %}
-    <ul>
-      {% for skill in skill_list %}
-        <li>
-          <p>{{ skill }}</p>
-          <a href="{% url "compendium:skill_detail" slug=skill.slug %}">View skill detail</a>
-          <br>
-          {% if user.is_authenticated %}
-            <a href="{% url "compendium:skill_update" slug=skill.slug %}">Edit skill detail</a>
-          {% endif %}
-          <br>
-          {% if user == skill.author %}
-            <a href="{% url "compendium:skill_delete" slug=skill.slug %}">Delete skill</a>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-    <p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
-    {% if page_obj.has_previous %}
-      <a href="?page=1">First</a>
-      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  <h2>Search skills</h2>
+  <label>
+    <input
+        type="text"
+        name="q"
+        placeholder="Search by name..."
+        hx-get="{% url 'compendium:skill_search' %}"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#skill-results"
+    >
+  </label>
+  <div id="skill-results">
+    {% if skill_list %}
+      <ul>
+        {% for skill in skill_list %}
+          <li>
+            <p>{{ skill }}</p>
+            <a href="{% url "compendium:skill_detail" slug=skill.slug %}">View skill detail</a>
+            <br>
+            {% if user.is_authenticated %}
+              <a href="{% url "compendium:skill_update" slug=skill.slug %}">Edit skill detail</a>
+            {% endif %}
+            <br>
+            {% if user == skill.author %}
+              <a href="{% url "compendium:skill_delete" slug=skill.slug %}">Delete skill</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+      <p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
+      {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+    {% else %}
+      <p>No skills yet.</p>
     {% endif %}
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">Next</a>
-      <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-    {% endif %}
-  {% else %}
-    <p>No skills yet.</p>
-  {% endif %}
+  </div>
 </body>
 </html>
