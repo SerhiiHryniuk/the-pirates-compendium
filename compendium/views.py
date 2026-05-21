@@ -307,6 +307,13 @@ class ScenarioDetailView(DetailView):
     template_name = 'compendium/scenario_detail.html'
     context_object_name = 'scenario_detail'
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        obj.view_count = F('view_count') + 1
+        obj.save(update_fields=['view_count'])
+        obj.refresh_from_db()
+        return obj
+
 
 class ScenarioUpdateView(UpdateView):
     model = Scenario
