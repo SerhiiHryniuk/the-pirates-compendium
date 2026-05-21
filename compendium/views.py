@@ -82,6 +82,7 @@ class DevilFruitListView(ListView):
     model = DevilFruit
     template_name = 'compendium/devil_fruit_list.html'
     context_object_name = 'devil_fruit_list'
+    paginate_by = 5
 
 
 class DevilFruitCreateView(CreateView):
