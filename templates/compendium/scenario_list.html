@@ -7,6 +7,14 @@
 <body>
   <h1>The Pirates Compendium</h1>
   <h2>Scenario list</h2>
+  <ul>
+    {% for scenario in top_scenarios %}
+      <li>
+        <a href="{% url "compendium:scenario_detail" slug=scenario.slug %}">{{ scenario.title }}</a>
+        <p>(views: {{ scenario.view_count }})</p>
+      </li>
+    {% endfor %}
+  </ul>
   {% if user.is_authenticated %}
     <p>User: {{ user.username }}</p>
     <form action="{% url "logout" %}" method=post>

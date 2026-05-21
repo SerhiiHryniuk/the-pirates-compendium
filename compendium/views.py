@@ -303,6 +303,11 @@ class ScenarioListView(ListView):
     context_object_name = 'scenario_list'
     paginate_by = 5
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['top_scenarios'] = Scenario.objects.order_by('-view_count', 'title')[:3]
+        return context
+
 
 class ScenarioCreateView(CreateView):
     model = Scenario
