@@ -16,6 +16,7 @@ class SkillListView(ListView):
     model = Skill
     template_name = 'compendium/skill_list.html'
     context_object_name = 'skill_list'
+    paginate_by = 5
 
 
 class SkillDetailView(DetailView):
