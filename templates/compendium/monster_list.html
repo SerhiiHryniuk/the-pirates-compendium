@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>The Pirates Compendium - Monster list</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 <body>
   <h1>The Pirates Compendium</h1>
@@ -36,34 +37,47 @@
   <a href="{% url "compendium:monster_list" %}">Monsters</a>
   <br>
   <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
-  {% if monster_list %}
-    <ul>
-      {% for monster in monster_list %}
-        <li>
-          <img src="{{ monster.image.url }}" alt="{{ monster.name }}" width="100">
-          <p>{{ monster }}</p>
-          <a href="{% url "compendium:monster_detail" slug=monster.slug %}">View monster detail</a>
-          <br>
-          {% if user.is_authenticated %}
-            <a href="{% url "compendium:monster_update" slug=monster.slug %}">Edit monster detail</a>
-          {% endif %}
-          <br>
-          {% if user == monster.author %}
-            <a href="{% url "compendium:monster_delete" slug=monster.slug %}">Delete monster</a>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-    {% if page_obj.has_previous %}
-      <a href="?page=1">First</a>
-      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  <h2>Search monster</h2>
+  <label>
+    <input
+        type="text"
+        name="search"
+        placeholder="Search by name..."
+        hx-get="{% url 'compendium:monster_search' %}"
+        hx-trigger="keyup changed delay:300"
+        hx-target="#monster-results"
+    >
+  </label>
+  <div id="monster-results">
+    {% if monster_list %}
+      <ul>
+        {% for monster in monster_list %}
+          <li>
+            <img src="{{ monster.image.url }}" alt="{{ monster.name }}" width="100">
+            <p>{{ monster }}</p>
+            <a href="{% url "compendium:monster_detail" slug=monster.slug %}">View monster detail</a>
+            <br>
+            {% if user.is_authenticated %}
+              <a href="{% url "compendium:monster_update" slug=monster.slug %}">Edit monster detail</a>
+            {% endif %}
+            <br>
+            {% if user == monster.author %}
+              <a href="{% url "compendium:monster_delete" slug=monster.slug %}">Delete monster</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+      {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+    {% else %}
+      <p>No monsters yet.</p>
     {% endif %}
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">Next</a>
-      <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-    {% endif %}
-  {% else %}
-    <p>No monsters yet.</p>
-  {% endif %}
+  </div>
 </body>
 </html>

@@ -215,6 +215,19 @@ class MonsterListView(ListView):
         return context
 
 
+class MonsterSearchView(ListView):
+    model = Monster
+    template_name = 'compendium/monster_search_results.html'
+    context_object_name = 'monster_list'
+    paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', '')
+        if query:
+            return Monster.objects.filter(name__icontains=query)
+        return Monster.objects.all()
+
+
 class MonsterCreateView(CreateView):
     model = Monster
     fields = ['name', 'description', 'origin', 'image', 'health_points', 'armor_class', 'challenge_rating', 'speed', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'skills']

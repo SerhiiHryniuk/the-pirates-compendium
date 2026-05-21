@@ -4,7 +4,7 @@ from compendium.views import IndexView, SkillListView, SkillCreateView, SkillDet
     SkillDeleteView, DevilFruitListView, DevilFruitCreateView, DevilFruitDetailView, DevilFruitUpdateView, \
     DevilFruitDeleteView, MonsterListView, MonsterCreateView, MonsterDetailView, MonsterUpdateView, MonsterDeleteView, \
     ScenarioListView, ScenarioCreateView, ScenarioUpdateView, ScenarioDetailView, ScenarioDeleteView, SkillPdfView, \
-    DevilFruitPdfView, MonsterPdfView, ScenarioPdfView, SkillSearchView, DevilFruitSearchView
+    DevilFruitPdfView, MonsterPdfView, ScenarioPdfView, SkillSearchView, DevilFruitSearchView, MonsterSearchView
 
 app_name = "compendium"
 
@@ -25,6 +25,7 @@ urlpatterns = [
     path("devil-fruit/<slug:slug>/delete/", DevilFruitDeleteView.as_view(), name="devil_fruit_delete"),
     path("devil-fruit/<slug:slug>/pdf/", DevilFruitPdfView.as_view(), name="devil_fruit_pdf"),
     path("monster/", MonsterListView.as_view(), name="monster_list"),
+    path("monster/search/", MonsterSearchView.as_view(), name="monster_search"),
     path("monster/create/", MonsterCreateView.as_view(), name="monster_create"),
     path("monster/<slug:slug>/", MonsterDetailView.as_view(), name="monster_detail"),
     path("monster/<slug:slug>/update/", MonsterUpdateView.as_view(), name="monster_update"),
