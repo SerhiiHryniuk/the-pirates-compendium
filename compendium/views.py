@@ -182,6 +182,11 @@ class MonsterListView(ListView):
     context_object_name = 'monster_list'
     paginate_by = 5
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['top_monsters'] = Monster.objects.order_by('-view_count', 'name')[:3]
+        return context
+
 
 class MonsterCreateView(CreateView):
     model = Monster

@@ -7,6 +7,14 @@
 <body>
   <h1>The Pirates Compendium</h1>
   <h2>Monster list</h2>
+  <ul>
+    {% for monster in top_monsters %}
+      <li>
+        <a href="{% url "compendium:monster_detail" slug=monster.slug %}">{{ monster.name }}</a>
+        <p>(views: {{ monster.view_count }})</p>
+      </li>
+    {% endfor %}
+  </ul>
   {% if user.is_authenticated %}
     <p>User: {{ user.username }}</p>
     <form action="{% url "logout" %}" method=post>
