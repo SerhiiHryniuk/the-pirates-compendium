@@ -1,0 +1,38 @@
+{% if scenario_list %}
+  <ul>
+    {% for scenario in scenario_list %}
+      <li>
+        <p>{{ scenario }}</p>
+        <a href="{% url "compendium:scenario_detail" slug=scenario.slug %}">View scenario detail</a>
+        <br>
+        {% if user.is_authenticated %}
+          <a href="{% url "compendium:scenario_update" slug=scenario.slug %}">Edit scenario detail</a>
+        {% endif %}
+        <br>
+        {% if user == scenario.author %}
+          <a href="{% url "compendium:scenario_delete" slug=scenario.slug %}">Delete scenario</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  <p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
+  {% if page_obj.has_previous %}
+    <a href="{% url 'compendium:scenario_search' %}?search={{ request.GET.search }}&page=1"
+       hx-get="{% url 'compendium:scenario_search' %}?search={{ request.GET.search }}&page=1"
+       hx-target="#scenario-results">First</a>
+    <a href="{% url 'compendium:scenario_search' %}?search={{ request.GET.search }}&page={{ page_obj.previous_page_number }}"
+       hx-get="{% url 'compendium:scenario_search' %}?search={{ request.GET.search }}&page={{ page_obj.previous_page_number }}"
+       hx-target="#scenario-results">Previous</a>
+  {% endif %}
+
+  {% if page_obj.has_next %}
+    <a href="{% url 'compendium:scenario_search' %}?search={{ request.GET.search }}&page={{ page_obj.next_page_number }}"
+       hx-get="{% url 'compendium:scenario_search' %}?search={{ request.GET.search }}&page={{ page_obj.next_page_number }}"
+       hx-target="#scenario-results">Next</a>
+    <a href="{% url 'compendium:scenario_search' %}?search={{ request.GET.search }}&page={{ page_obj.paginator.num_pages }}"
+       hx-get="{% url 'compendium:scenario_search' %}?search={{ request.GET.search }}&page={{ page_obj.paginator.num_pages }}"
+       hx-target="#scenario-results">Last</a>
+  {% endif %}
+{% else %}
+  <p>No scenario yet.</p>
+{% endif %}

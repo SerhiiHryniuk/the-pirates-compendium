@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>The Pirates Compendium - Scenario list</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 <body>
   <h1>The Pirates Compendium</h1>
@@ -36,33 +37,46 @@
   <a href="{% url "compendium:monster_list" %}">Monsters</a>
   <br>
   <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
-  {% if scenario_list %}
-    <ul>
-      {% for scenario in scenario_list %}
-        <li>
-          <p>{{ scenario }}</p>
-          <a href="{% url "compendium:scenario_detail" slug=scenario.slug %}">View scenario detail</a>
-          <br>
-          {% if user.is_authenticated %}
-            <a href="{% url "compendium:scenario_update" slug=scenario.slug %}">Edit scenario detail</a>
-          {% endif %}
-          <br>
-          {% if user == scenario.author %}
-            <a href="{% url "compendium:scenario_delete" slug=scenario.slug %}">Delete scenario</a>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-    {% if page_obj.has_previous %}
-      <a href="?page=1">First</a>
-      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  <h2>Search scenario</h2>
+  <label>
+    <input
+        type="text"
+        name="search"
+        placeholder="Search by title..."
+        hx-get="{% url 'compendium:scenario_search' %}"
+        hx-trigger="keyup changed delay:300"
+        hx-target="#scenario-results"
+    >
+  </label>
+  <div id="scenario-results">
+    {% if scenario_list %}
+      <ul>
+        {% for scenario in scenario_list %}
+          <li>
+            <p>{{ scenario }}</p>
+            <a href="{% url "compendium:scenario_detail" slug=scenario.slug %}">View scenario detail</a>
+            <br>
+            {% if user.is_authenticated %}
+              <a href="{% url "compendium:scenario_update" slug=scenario.slug %}">Edit scenario detail</a>
+            {% endif %}
+            <br>
+            {% if user == scenario.author %}
+              <a href="{% url "compendium:scenario_delete" slug=scenario.slug %}">Delete scenario</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+      {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+    {% else %}
+      <p>No scenario yet.</p>
     {% endif %}
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">Next</a>
-      <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-    {% endif %}
-  {% else %}
-    <p>No scenario yet.</p>
-  {% endif %}
+  </div>
 </body>
 </html>

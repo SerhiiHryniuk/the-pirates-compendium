@@ -349,6 +349,19 @@ class ScenarioListView(ListView):
         return context
 
 
+class ScenarioSearchView(ListView):
+    model = Scenario
+    template_name = 'compendium/scenario_search_results.html'
+    context_object_name = 'scenario_list'
+    paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', '')
+        if query:
+            return Scenario.objects.filter(title__icontains=query)
+        return Scenario.objects.all()
+
+
 class ScenarioCreateView(CreateView):
     model = Scenario
     fields = ['title', 'description', 'starting_hook', 'monsters']
