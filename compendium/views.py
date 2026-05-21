@@ -192,6 +192,13 @@ class MonsterDetailView(DetailView):
     template_name = 'compendium/monster_detail.html'
     context_object_name = 'monster_detail'
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        obj.view_count = F('view_count') + 1
+        obj.save(update_fields=['view_count'])
+        obj.refresh_from_db()
+        return obj
+
 
 class MonsterUpdateView(UpdateView):
     model = Monster

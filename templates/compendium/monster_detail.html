@@ -27,6 +27,7 @@
   <br>
   <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
   <h2>Monster {{ monster_detail }}</h2>
+  <h2>View count: {{ monster_detail.view_count }}</h2>
   <a href="{% url "compendium:monster_pdf" slug=monster_detail.slug %}" target="_blank">
     Download PDF
   </a>
