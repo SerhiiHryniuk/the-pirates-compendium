@@ -36,6 +36,9 @@ class Skill(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="skills")
     view_count = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        ordering = ["name"]
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -57,6 +60,9 @@ class DevilFruit(models.Model):
     view_count = models.PositiveIntegerField(default=0)
     skills = models.ManyToManyField(Skill, related_name="devil_fruits")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="devil_fruits")
+
+    class Meta:
+        ordering = ["name"]
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -87,6 +93,9 @@ class Monster(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="monsters")
     skills = models.ManyToManyField(Skill, related_name="monsters")
 
+    class Meta:
+        ordering = ["name"]
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -103,6 +112,9 @@ class Scenario(models.Model):
     view_count = models.PositiveIntegerField(default=0)
     monsters = models.ManyToManyField(Monster, related_name="scenarios")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="scenarios")
+
+    class Meta:
+        ordering = ["title"]
 
     def save(self, *args, **kwargs):
         if not self.slug:
