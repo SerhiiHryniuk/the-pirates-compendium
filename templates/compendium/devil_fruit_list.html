@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>The Pirates Compendium - Devil fruit list</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 <body>
   <h1>The Pirates Compendium</h1>
@@ -36,35 +37,48 @@
   <a href="{% url "compendium:monster_list" %}">Monsters</a>
   <br>
   <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
-  {% if devil_fruit_list %}
-    <ul>
-      {% for devil_fruit in devil_fruit_list %}
-        <li>
-          <img src="{{ devil_fruit.image.url }}" alt="{{ devil_fruit.name }}" width="100">
-          <p>{{ devil_fruit }}</p>
-          <a href="{% url "compendium:devil_fruit_detail" slug=devil_fruit.slug %}">View devil fruit detail</a>
-          <br>
-          {% if user.is_authenticated %}
-            <a href="{% url "compendium:devil_fruit_update" slug=devil_fruit.slug %}">Edit devil fruit detail</a>
-          {% endif %}
-          <br>
-          {% if user == devil_fruit.author %}
-            <a href="{% url "compendium:devil_fruit_delete" slug=devil_fruit.slug %}">Delete devil fruit</a>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-    <p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
-    {% if page_obj.has_previous %}
-      <a href="?page=1">First</a>
-      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  <h2>Search devil fruit</h2>
+  <label>
+    <input
+        type="text"
+        name="search"
+        placeholder="Search by name..."
+        hx-get="{% url 'compendium:devil_fruit_search' %}"
+        hx-trigger="keyup changed delay:300"
+        hx-target="#devil-fruit-results"
+    >
+  </label>
+  <div id="devil-fruit-results">
+    {% if devil_fruit_list %}
+      <ul>
+        {% for devil_fruit in devil_fruit_list %}
+          <li>
+            <img src="{{ devil_fruit.image.url }}" alt="{{ devil_fruit.name }}" width="100">
+            <p>{{ devil_fruit }}</p>
+            <a href="{% url "compendium:devil_fruit_detail" slug=devil_fruit.slug %}">View devil fruit detail</a>
+            <br>
+            {% if user.is_authenticated %}
+              <a href="{% url "compendium:devil_fruit_update" slug=devil_fruit.slug %}">Edit devil fruit detail</a>
+            {% endif %}
+            <br>
+            {% if user == devil_fruit.author %}
+              <a href="{% url "compendium:devil_fruit_delete" slug=devil_fruit.slug %}">Delete devil fruit</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+      <p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
+      {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+    {% else %}
+      <p>No devil fruit yet.</p>
     {% endif %}
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">Next</a>
-      <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-    {% endif %}
-  {% else %}
-    <p>No devil fruit yet.</p>
-  {% endif %}
+  </div>
 </body>
 </html>

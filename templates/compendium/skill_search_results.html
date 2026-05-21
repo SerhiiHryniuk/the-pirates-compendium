@@ -19,20 +19,20 @@
   <p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
 
   {% if page_obj.has_previous %}
-    <a href="{% url 'compendium:skill_search' %}?q={{ request.GET.q }}&page=1"
-       hx-get="{% url 'compendium:skill_search' %}?q={{ request.GET.q }}&page=1"
+    <a href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page=1"
+       hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page=1"
        hx-target="#skill-results">First</a>
-    <a href="{% url 'compendium:skill_search' %}?q={{ request.GET.q }}&page={{ page_obj.previous_page_number }}"
-       hx-get="{% url 'compendium:skill_search' %}?q={{ request.GET.q }}&page={{ page_obj.previous_page_number }}"
+    <a href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.previous_page_number }}"
+       hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.previous_page_number }}"
        hx-target="#skill-results">Previous</a>
   {% endif %}
 
   {% if page_obj.has_next %}
-    <a href="{% url 'compendium:skill_search' %}?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}"
-       hx-get="{% url 'compendium:skill_search' %}?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}"
+    <a href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.next_page_number }}"
+       hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.next_page_number }}"
        hx-target="#skill-results">Next</a>
-    <a href="{% url 'compendium:skill_search' %}?q={{ request.GET.q }}&page={{ page_obj.paginator.num_pages }}"
-       hx-get="{% url 'compendium:skill_search' %}?q={{ request.GET.q }}&page={{ page_obj.paginator.num_pages }}"
+    <a href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.paginator.num_pages }}"
+       hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.paginator.num_pages }}"
        hx-target="#skill-results">Last</a>
   {% endif %}
 

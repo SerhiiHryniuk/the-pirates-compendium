@@ -25,6 +25,19 @@ class SkillListView(ListView):
         return context
 
 
+class SkillSearchView(ListView):
+    model = Skill
+    template_name = 'compendium/skill_search_results.html'
+    context_object_name = 'skill_list'
+    paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', '')
+        if query:
+            return Skill.objects.filter(name__icontains=query)
+        return Skill.objects.all()
+
+
 class SkillDetailView(DetailView):
     model = Skill
     template_name = 'compendium/skill_detail.html'
@@ -94,6 +107,19 @@ class DevilFruitListView(ListView):
         context = super().get_context_data(**kwargs)
         context['top_devil_fruits'] = DevilFruit.objects.order_by('-view_count', 'name')[:3]
         return context
+
+
+class DevilFruitSearchView(ListView):
+    model = DevilFruit
+    template_name = 'compendium/devil_fruit_search_results.html'
+    context_object_name = 'devil_fruit_list'
+    paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', '')
+        if query:
+            return DevilFruit.objects.filter(name__icontains=query)
+        return DevilFruit.objects.all()
 
 
 class DevilFruitCreateView(CreateView):
@@ -308,19 +334,6 @@ class ScenarioListView(ListView):
         context = super().get_context_data(**kwargs)
         context['top_scenarios'] = Scenario.objects.order_by('-view_count', 'title')[:3]
         return context
-
-
-class SkillSearchView(ListView):
-    model = Skill
-    template_name = 'compendium/skill_search_results.html'
-    context_object_name = 'skill_list'
-    paginate_by = 5
-
-    def get_queryset(self):
-        query = self.request.GET.get('q', '')
-        if query:
-            return Skill.objects.filter(name__icontains=query)
-        return Skill.objects.all()
 
 
 class ScenarioCreateView(CreateView):
