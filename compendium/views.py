@@ -170,6 +170,7 @@ class MonsterListView(ListView):
     model = Monster
     template_name = 'compendium/monster_list.html'
     context_object_name = 'monster_list'
+    paginate_by = 5
 
 
 class MonsterCreateView(CreateView):
