@@ -7,6 +7,14 @@
 <body>
   <h1>The Pirates Compendium</h1>
   <h2>Devil fruit list</h2>
+  <ul>
+    {% for devil_fruit in top_devil_fruits %}
+      <li>
+        <a href="{% url "compendium:devil_fruit_detail" slug=devil_fruit.slug %}">{{ devil_fruit.name }}</a>
+        <p>(views: {{ devil_fruit.view_count }})</p>
+      </li>
+    {% endfor %}
+  </ul>
   {% if user.is_authenticated %}
     <p>User: {{ user.username }}</p>
     <form action="{% url "logout" %}" method=post>

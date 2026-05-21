@@ -89,6 +89,11 @@ class DevilFruitListView(ListView):
     context_object_name = 'devil_fruit_list'
     paginate_by = 5
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['top_devil_fruits'] = DevilFruit.objects.order_by('-view_count', 'name')[:3]
+        return context
+
 
 class DevilFruitCreateView(CreateView):
     model = DevilFruit
