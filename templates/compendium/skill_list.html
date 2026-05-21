@@ -7,6 +7,14 @@
 <body>
   <h1>The Pirates Compendium</h1>
   <h2>Skill list</h2>
+  <ul>
+    {% for skill in top_skills %}
+      <li>
+        <a href="{% url "compendium:skill_detail" slug=skill.slug %}">{{ skill.name }}</a>
+        <p>(views: {{ skill.view_count }})</p>
+      </li>
+    {% endfor %}
+  </ul>
   {% if user.is_authenticated %}
     <p>User: {{ user.username }}</p>
     <form action="{% url "logout" %}" method=post>

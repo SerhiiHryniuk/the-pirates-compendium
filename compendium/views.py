@@ -18,6 +18,11 @@ class SkillListView(ListView):
     context_object_name = 'skill_list'
     paginate_by = 5
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['top_skills'] = Skill.objects.order_by('-view_count', 'name')[:3]
+        return context
+
 
 class SkillDetailView(DetailView):
     model = Skill
