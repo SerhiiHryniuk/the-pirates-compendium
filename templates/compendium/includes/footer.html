@@ -1,0 +1,58 @@
+<footer class="py-5 mt-5 border-top">
+  <div class="container">
+    <div class="row gy-4">
+
+      <div class="col-md-4">
+        <h5 class="text-warning mb-2">
+          <i class="bi bi-compass me-2"></i>The Pirates Compendium
+        </h5>
+        <p class="text-muted small fst-italic">
+          A community-built TTRPG reference for the world of One Piece.
+          Browse, create, and share.
+        </p>
+      </div>
+
+      <div class="col-md-4">
+        <h6 class="text-uppercase text-muted small fw-bold mb-3">Explore</h6>
+        <ul class="list-unstyled mb-0">
+          <li class="mb-2">
+            <a href="{% url 'compendium:skill_list' %}" class="text-muted text-decoration-none">
+              <i class="bi bi-lightning-charge me-1 text-warning"></i>Skills
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="{% url 'compendium:devil_fruit_list' %}" class="text-muted text-decoration-none">
+              <i class="bi bi-circle-half me-1 text-info"></i>Devil Fruits
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="{% url 'compendium:monster_list' %}" class="text-muted text-decoration-none">
+              <i class="bi bi-shield-exclamation me-1 text-danger"></i>Monsters
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="{% url 'compendium:scenario_list' %}" class="text-muted text-decoration-none">
+              <i class="bi bi-map me-1 text-success"></i>Scenarios
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <h6 class="text-uppercase text-muted small fw-bold mb-3">Connect</h6>
+        <div class="d-flex gap-3 fs-4">
+          <a href="https://github.com/SerhiiHryniuk/the-pirates-compendium" class="text-muted" title="GitHub"><i class="bi bi-github"></i></a>
+          <a href="https://www.linkedin.com/in/serhii-hryniuk-7a3902271/" class="text-muted" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="mt-4 mb-3">
+
+    <p class="text-muted text-center small mb-0">
+      &copy; 2026 The Pirates Compendium &nbsp;⚓&nbsp; All rights reserved.
+    </p>
+
+  </div>
+</footer>
