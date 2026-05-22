@@ -1,0 +1,148 @@
+from django import forms
+from django.db.models import F
+from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.views.generic import (
+    ListView,
+    CreateView,
+    DetailView,
+    UpdateView,
+    DeleteView
+)
+from weasyprint import HTML
+
+from compendium.models import Monster, Skill
+
+
+class MonsterListView(ListView):
+    model = Monster
+    template_name = 'compendium/monsters_templates/monster_list.html'
+    context_object_name = 'monster_list'
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['top_monsters'] = Monster.objects.order_by('-view_count', 'name')[:3]
+        return context
+
+
+class MonsterSearchView(ListView):
+    model = Monster
+    template_name = 'compendium/monsters_templates/monster_search_results.html'
+    context_object_name = 'monster_list'
+    paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', '')
+        if query:
+            return Monster.objects.filter(name__icontains=query)
+        return Monster.objects.all()
+
+
+class MonsterCreateView(CreateView):
+    model = Monster
+    fields = ['name', 'description', 'origin', 'image', 'health_points', 'armor_class', 'challenge_rating', 'speed', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'skills']
+    template_name = 'compendium/monsters_templates/monster_form.html'
+    success_url = reverse_lazy('compendium:monster_list')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['skills'].widget = forms.CheckboxSelectMultiple()
+        form.fields['skills'].queryset = Skill.objects.all()
+        return form
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class MonsterDetailView(DetailView):
+    model = Monster
+    template_name = 'compendium/monsters_templates/monster_detail.html'
+    context_object_name = 'monster_detail'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        obj.view_count = F('view_count') + 1
+        obj.save(update_fields=['view_count'])
+        obj.refresh_from_db()
+        return obj
+
+
+class MonsterUpdateView(UpdateView):
+    model = Monster
+    fields = ['name', 'description', 'origin', 'image', 'health_points', 'armor_class', 'challenge_rating', 'speed', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'skills']
+    template_name = 'compendium/monsters_templates/monster_form.html'
+    success_url = reverse_lazy('compendium:monster_list')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['skills'].widget = forms.CheckboxSelectMultiple()
+        form.fields['skills'].queryset = Skill.objects.all()
+        return form
+
+
+class MonsterDeleteView(DeleteView):
+    model = Monster
+    template_name = 'compendium/monsters_templates/monster_delete.html'
+    success_url = reverse_lazy('compendium:monster_list')
+
+
+class MonsterPdfView(DetailView):
+    model = Monster
+
+    def render_to_response(self, context, **response_kwargs):
+        monster = self.object
+        image_html = ""
+        if monster.image:
+            clean_path = monster.image.path.replace('\\', '/')
+            image_html = f'<img src="file:///{clean_path}" style="max-width: 250px; height: auto; display: block; margin: 10px 0;">'
+        skills_html = "".join([f"<li>{skill.name}</li>" for skill in monster.skills.all()])
+        html_content = f"""
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                </head>
+                <body>
+                    <h1>Monster: {monster.name}</h1>
+                    <p><strong>Origin:</strong> {monster.origin}</p>
+                    <p><strong>Challenge Rating:</strong> {monster.challenge_rating}</p>
+                    <p><strong>Description:</strong> {monster.description}</p>
+
+                    {image_html}
+
+                    <h3>Combat Stats & Attributes:</h3>
+                    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%; max-width: 500px;">
+                        <tr>
+                            <td><strong>Health Points (HP):</strong></td> <td>{monster.health_points}</td>
+                            <td><strong>Armor Class (AC):</strong></td> <td>{monster.armor_class}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Speed:</strong></td> <td>{monster.speed} m.</td>
+                            <td><strong>Strength (STR):</strong></td> <td>{monster.strength}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dexterity (DEX):</strong></td> <td>{monster.dexterity}</td>
+                            <td><strong>Constitution (CON):</strong></td> <td>{monster.constitution}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Intelligence (INT):</strong></td> <td>{monster.intelligence}</td>
+                            <td><strong>Wisdom (WIS):</strong></td> <td>{monster.wisdom}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Charisma (CHA):</strong></td> <td>{monster.charisma}</td>
+                            <td><strong>Views:</strong></td> <td>{monster.view_count}</td>
+                        </tr>
+                    </table>
+
+                    <h3>Skills & Abilities:</h3>
+                    <ul>
+                        {skills_html}
+                    </ul>
+                </body>
+                </html>
+                """
+        pdf_file = HTML(string=html_content).write_pdf()
+        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="monster_{monster.slug}.pdf"'
+        return response
