@@ -46,7 +46,7 @@ class RegisterView(View):
 
 class SkillListView(ListView):
     model = Skill
-    template_name = 'compendium/skill_list.html'
+    template_name = 'compendium/skills_templates/skill_list.html'
     context_object_name = 'skill_list'
     paginate_by = 5
 
@@ -58,7 +58,7 @@ class SkillListView(ListView):
 
 class SkillSearchView(ListView):
     model = Skill
-    template_name = 'compendium/skill_search_results.html'
+    template_name = 'compendium/skills_templates/skill_search_results.html'
     context_object_name = 'skill_list'
     paginate_by = 5
 
@@ -71,7 +71,7 @@ class SkillSearchView(ListView):
 
 class SkillDetailView(DetailView):
     model = Skill
-    template_name = 'compendium/skill_detail.html'
+    template_name = 'compendium/skills_templates/skill_detail.html'
     context_object_name = 'skill_detail'
 
     def get_object(self, queryset=None):
@@ -85,7 +85,7 @@ class SkillDetailView(DetailView):
 class SkillCreateView(CreateView):
     model = Skill
     fields = ['name', 'description', 'dmg_dice', 'skill_type']
-    template_name = 'compendium/skill_form.html'
+    template_name = 'compendium/skills_templates/skill_form.html'
     success_url = reverse_lazy('compendium:skill_list')
 
     def form_valid(self, form):
@@ -96,13 +96,13 @@ class SkillCreateView(CreateView):
 class SkillUpdateView(UpdateView):
     model = Skill
     fields = ['name', 'description', 'dmg_dice', 'skill_type']
-    template_name = 'compendium/skill_form.html'
+    template_name = 'compendium/skills_templates/skill_form.html'
     success_url = reverse_lazy('compendium:skill_list')
 
 
 class SkillDeleteView(DeleteView):
     model = Skill
-    template_name = 'compendium/skill_delete.html'
+    template_name = 'compendium/skills_templates/skill_delete.html'
     success_url = reverse_lazy('compendium:skill_list')
 
 
