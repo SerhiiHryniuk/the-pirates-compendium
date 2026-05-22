@@ -79,13 +79,11 @@
                      class="btn btn-outline-warning btn-sm">
                     <i class="bi bi-eye me-1"></i>View
                   </a>
-                  {% if user.is_authenticated %}
+                  {% if user == devil_fruit.author %}
                     <a href="{% url 'compendium:devil_fruit_update' slug=devil_fruit.slug %}"
                        class="btn btn-outline-light btn-sm">
                       <i class="bi bi-pencil me-1"></i>Edit
                     </a>
-                  {% endif %}
-                  {% if user == devil_fruit.author %}
                     <a href="{% url 'compendium:devil_fruit_delete' slug=devil_fruit.slug %}"
                        class="btn btn-outline-danger btn-sm">
                       <i class="bi bi-trash me-1"></i>Delete
