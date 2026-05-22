@@ -1,35 +1,184 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>The Pirates Compendium - Monster detail</title>
-</head>
-<body>
-  <h1>The Pirates Compendium - Monster detail</h1>
-  {% if user.is_authenticated %}
-    <p>User: {{ user.username }}</p>
-    <form action="{% url "logout" %}" method=post>
-      {% csrf_token %}
-      <input type="hidden" name="next" value="{{ request.path }}" />
-      <button type="submit">Logout</button>
-    </form>
-  {% else %}
-    <a href="{% url "login" %}">Login</a>
-  {% endif %}
-  <br>
-  <a href="{% url "compendium:index" %}">Home</a>
-  <br>
-  <a href="{% url "compendium:skill_list" %}">Skills</a>
-  <br>
-  <a href="{% url "compendium:devil_fruit_list" %}">Devil fruits</a>
-  <br>
-  <a href="{% url "compendium:monster_list" %}">Monsters</a>
-  <br>
-  <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
-  <h2>Monster {{ monster_detail }}</h2>
-  <h2>View count: {{ monster_detail.view_count }}</h2>
-  <a href="{% url "compendium:monster_pdf" slug=monster_detail.slug %}" target="_blank">
-    Download PDF
-  </a>
-</body>
-</html>
+{% extends "compendium/base.html" %}
+
+{% block title %}{{ monster_detail.name }} — The Pirates Compendium{% endblock %}
+
+{% block content %}
+
+  <div class="row g-4">
+
+    <div class="col-lg-8">
+      <div class="card border-secondary">
+
+        <div class="card-header border-secondary d-flex justify-content-between align-items-center">
+          <h3 class="mb-0 text-warning">
+            <i class="bi bi-shield-exclamation me-2 text-danger"></i>{{ monster_detail.name }}
+          </h3>
+          <span class="badge bg-secondary">
+            <i class="bi bi-eye me-1"></i>{{ monster_detail.view_count }} views
+          </span>
+        </div>
+
+        <div class="card-body p-4">
+
+          {% if monster_detail.image %}
+            <div class="text-center mb-4">
+              <img
+                src="{{ monster_detail.image.url }}"
+                alt="{{ monster_detail.name }}"
+                class="rounded border border-secondary"
+                style="max-height: 280px; object-fit: contain;"
+              >
+            </div>
+          {% endif %}
+
+          <div class="d-flex gap-2 flex-wrap mb-4">
+            <span class="badge bg-secondary fs-6 px-3 py-2">
+              <i class="bi bi-geo-alt me-1"></i>{{ monster_detail.origin }}
+            </span>
+            <span class="badge bg-danger fs-6 px-3 py-2">
+              <i class="bi bi-star me-1"></i>CR {{ monster_detail.challenge_rating }}
+            </span>
+          </div>
+
+          <h6 class="text-uppercase text-muted small fw-bold mb-2">Description</h6>
+          <p class="text-light mb-4">{{ monster_detail.description }}</p>
+
+          <hr class="border-secondary">
+
+          <h6 class="text-uppercase text-muted small fw-bold mb-3">Combat Stats</h6>
+          <div class="row g-2 mb-2">
+
+            <div class="col-4">
+              <div class="card border-secondary text-center py-2">
+                <p class="text-muted small mb-0">HP</p>
+                <p class="text-danger fw-bold fs-5 mb-0">{{ monster_detail.health_points }}</p>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="card border-secondary text-center py-2">
+                <p class="text-muted small mb-0">AC</p>
+                <p class="text-info fw-bold fs-5 mb-0">{{ monster_detail.armor_class }}</p>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="card border-secondary text-center py-2">
+                <p class="text-muted small mb-0">Speed</p>
+                <p class="text-warning fw-bold fs-5 mb-0">{{ monster_detail.speed }}m</p>
+              </div>
+            </div>
+
+          </div>
+
+          <h6 class="text-uppercase text-muted small fw-bold mb-3 mt-4">Ability Scores</h6>
+          <div class="row g-2 mb-4">
+
+            <div class="col-4 col-sm-2">
+              <div class="card border-secondary text-center py-2">
+                <p class="text-muted small mb-0">STR</p>
+                <p class="text-light fw-bold mb-0">{{ monster_detail.strength }}</p>
+              </div>
+            </div>
+
+            <div class="col-4 col-sm-2">
+              <div class="card border-secondary text-center py-2">
+                <p class="text-muted small mb-0">DEX</p>
+                <p class="text-light fw-bold mb-0">{{ monster_detail.dexterity }}</p>
+              </div>
+            </div>
+
+            <div class="col-4 col-sm-2">
+              <div class="card border-secondary text-center py-2">
+                <p class="text-muted small mb-0">CON</p>
+                <p class="text-light fw-bold mb-0">{{ monster_detail.constitution }}</p>
+              </div>
+            </div>
+
+            <div class="col-4 col-sm-2">
+              <div class="card border-secondary text-center py-2">
+                <p class="text-muted small mb-0">INT</p>
+                <p class="text-light fw-bold mb-0">{{ monster_detail.intelligence }}</p>
+              </div>
+            </div>
+
+            <div class="col-4 col-sm-2">
+              <div class="card border-secondary text-center py-2">
+                <p class="text-muted small mb-0">WIS</p>
+                <p class="text-light fw-bold mb-0">{{ monster_detail.wisdom }}</p>
+              </div>
+            </div>
+
+            <div class="col-4 col-sm-2">
+              <div class="card border-secondary text-center py-2">
+                <p class="text-muted small mb-0">CHA</p>
+                <p class="text-light fw-bold mb-0">{{ monster_detail.charisma }}</p>
+              </div>
+            </div>
+
+          </div>
+
+          {% if monster_detail.skills.exists %}
+            <hr class="border-secondary">
+            <h6 class="text-uppercase text-muted small fw-bold mb-3">
+              <i class="bi bi-lightning-charge me-1 text-warning"></i>Skills & Abilities
+            </h6>
+            <div class="row g-2">
+              {% for skill in monster_detail.skills.all %}
+                <div class="col-sm-6">
+                  <div class="card border-secondary">
+                    <div class="card-body py-2 px-3">
+                      <a href="{% url 'compendium:skill_detail' slug=skill.slug %}"
+                         class="text-warning fw-semibold">
+                        {{ skill.name }}
+                      </a>
+                      <p class="text-muted small mb-0">
+                        {{ skill.skill_type }}
+                        {% if skill.dmg_dice %} — {{ skill.dmg_dice }}{% endif %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <hr class="border-secondary">
+
+          <p class="text-muted small mb-0">
+            <i class="bi bi-person-circle me-1"></i>
+            Created by <span class="text-light">{{ monster_detail.author.username }}</span>
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-secondary">
+        <div class="card-header border-secondary">
+          <h6 class="mb-0 text-muted text-uppercase small fw-bold">Actions</h6>
+        </div>
+        <div class="card-body d-grid gap-2">
+          <a href="{% url 'compendium:monster_pdf' slug=monster_detail.slug %}"
+             target="_blank"
+             class="btn btn-outline-warning">
+            <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
+          </a>
+          {% if user == monster_detail.author %}
+            <a href="{% url 'compendium:monster_update' slug=monster_detail.slug %}"
+               class="btn btn-outline-light">
+              <i class="bi bi-pencil me-1"></i>Edit Monster
+            </a>
+            <a href="{% url 'compendium:monster_delete' slug=monster_detail.slug %}"
+               class="btn btn-outline-danger">
+              <i class="bi bi-trash me-1"></i>Delete Monster
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}
