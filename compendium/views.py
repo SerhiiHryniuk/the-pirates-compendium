@@ -130,7 +130,7 @@ class SkillPdfView(DetailView):
 
 class DevilFruitListView(ListView):
     model = DevilFruit
-    template_name = 'compendium/devil_fruit_list.html'
+    template_name = 'compendium/devil_fruits_templates/devil_fruit_list.html'
     context_object_name = 'devil_fruit_list'
     paginate_by = 5
 
@@ -142,7 +142,7 @@ class DevilFruitListView(ListView):
 
 class DevilFruitSearchView(ListView):
     model = DevilFruit
-    template_name = 'compendium/devil_fruit_search_results.html'
+    template_name = 'compendium/devil_fruits_templates/devil_fruit_search_results.html'
     context_object_name = 'devil_fruit_list'
     paginate_by = 5
 
@@ -156,7 +156,7 @@ class DevilFruitSearchView(ListView):
 class DevilFruitCreateView(CreateView):
     model = DevilFruit
     fields = ['name', 'fruit_type', 'description', 'image', 'skills']
-    template_name = 'compendium/devil_fruit_form.html'
+    template_name = 'compendium/devil_fruits_templates/devil_fruit_form.html'
     success_url = reverse_lazy('compendium:devil_fruit_list')
 
     def get_form(self, form_class=None):
@@ -172,7 +172,7 @@ class DevilFruitCreateView(CreateView):
 
 class DevilFruitDetailView(DetailView):
     model = DevilFruit
-    template_name = 'compendium/devil_fruit_detail.html'
+    template_name = 'compendium/devil_fruits_templates/devil_fruit_detail.html'
     context_object_name = 'devil_fruit_detail'
 
     def get_object(self, queryset=None):
@@ -186,7 +186,7 @@ class DevilFruitDetailView(DetailView):
 class DevilFruitUpdateView(UpdateView):
     model = DevilFruit
     fields = ['name', 'fruit_type', 'description', 'image', 'skills']
-    template_name = 'compendium/devil_fruit_form.html'
+    template_name = 'compendium/devil_fruits_templates/devil_fruit_form.html'
     success_url = reverse_lazy('compendium:devil_fruit_list')
 
     def get_form(self, form_class=None):
@@ -198,7 +198,7 @@ class DevilFruitUpdateView(UpdateView):
 
 class DevilFruitDeleteView(DeleteView):
     model = DevilFruit
-    template_name = 'compendium/devil_fruit_delete.html'
+    template_name = 'compendium/devil_fruits_templates/devil_fruit_delete.html'
     success_url = reverse_lazy('compendium:devil_fruit_list')
 
 
