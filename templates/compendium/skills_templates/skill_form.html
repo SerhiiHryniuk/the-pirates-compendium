@@ -1,36 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>The Pirates Compendium - Skill creator</title>
-</head>
-<body>
-  <h1>The Pirates Compendium</h1>
-  <h2>Skill creator</h2>
-  {% if user.is_authenticated %}
-    <p>User: {{ user.username }}</p>
-    <form action="{% url "logout" %}" method=post>
-      {% csrf_token %}
-      <input type="hidden" name="next" value="{{ request.path }}" />
-      <button type="submit">Logout</button>
-    </form>
-  {% else %}
-    <a href="{% url "login" %}">Login</a>
-  {% endif %}
-  <br>
-  <a href="{% url "compendium:index" %}">Home</a>
-  <br>
-  <a href="{% url "compendium:skill_list" %}">Skills</a>
-  <br>
-  <a href="{% url "compendium:devil_fruit_list" %}">Devil fruits</a>
-  <br>
-  <a href="{% url "compendium:monster_list" %}">Monsters</a>
-  <br>
-  <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
-  <form action="" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-  </form>
-</body>
-</html>
+{% extends "compendium/base.html" %}
+
+{% block title %}Skill Creator — The Pirates Compendium{% endblock %}
+
+{% block content %}
+
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card border-secondary">
+
+        <div class="card-header border-secondary">
+          <h4 class="mb-0 text-warning">
+            <i class="bi bi-lightning-charge me-2"></i>
+            {% if object %}Edit Skill{% else %}Create New Skill{% endif %}
+          </h4>
+        </div>
+
+        <div class="card-body p-4">
+          <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+              <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
+                  {{ field.label }}
+                </label>
+
+                {% if field.field.widget.input_type == 'select' %}
+                  <select name="{{ field.html_name }}"
+                          id="{{ field.id_for_label }}"
+                          class="form-select bg-dark text-light border-secondary
+                          {% if field.errors %}is-invalid{% endif %}">
+                    {% for value, label in field.field.choices %}
+                      <option value="{{ value }}"
+                        {% if field.value == value %}selected{% endif %}>
+                        {{ label }}
+                      </option>
+                    {% endfor %}
+                  </select>
+
+                {% elif field.field.widget.input_type == 'textarea' %}
+                  <textarea name="{{ field.html_name }}"
+                            id="{{ field.id_for_label }}"
+                            rows="4"
+                            class="form-control bg-dark text-light border-secondary
+                            {% if field.errors %}is-invalid{% endif %}"
+                            >{{ field.value|default:'' }}</textarea>
+
+                {% else %}
+                  <input type="{{ field.field.widget.input_type }}"
+                         name="{{ field.html_name }}"
+                         id="{{ field.id_for_label }}"
+                         value="{{ field.value|default:'' }}"
+                         class="form-control bg-dark text-light border-secondary
+                         {% if field.errors %}is-invalid{% endif %}">
+                {% endif %}
+
+                {% if field.help_text %}
+                  <div class="form-text text-muted small">{{ field.help_text }}</div>
+                {% endif %}
+
+                {% for error in field.errors %}
+                  <div class="invalid-feedback d-block">
+                    <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                  </div>
+                {% endfor %}
+
+              </div>
+            {% endfor %}
+
+            <hr class="border-secondary">
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-warning">
+                <i class="bi bi-check-circle me-1"></i>
+                {% if object %}Save Changes{% else %}Create Skill{% endif %}
+              </button>
+              <a href="{% url 'compendium:skill_list' %}" class="btn btn-outline-light">
+                <i class="bi bi-x-circle me-1"></i>Cancel
+              </a>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
