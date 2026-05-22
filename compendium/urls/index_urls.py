@@ -1,6 +1,6 @@
 from django.urls import path
 
-from compendium.views import IndexView
+from compendium.views import IndexView, RegisterView
 
 urlpatterns = [
     path(
@@ -8,4 +8,9 @@ urlpatterns = [
         IndexView.as_view(),
         name='index'
     ),
+    path(
+        "register/",
+        RegisterView.as_view(),
+        name='register'
+    )
 ]

@@ -1,13 +1,14 @@
-from multiprocessing import context
-
 from django import forms
+from django.contrib.auth import login
 from django.db.models import F
-from django.db.models.sql import query
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
 from weasyprint import HTML
 
+from compendium.forms import RegisterForm
 from compendium.models import Skill, DevilFruit, Monster, Scenario
 
 
@@ -25,6 +26,22 @@ class IndexView(TemplateView):
         context['top_monsters'] = Monster.objects.order_by('-view_count', 'name')[:3]
         context['top_scenarios'] = Scenario.objects.order_by('-view_count', 'title')[:3]
         return context
+
+
+class RegisterView(View):
+    template_name = 'compendium/registration/register.html'
+
+    def get(self, request):
+        form = RegisterForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('compendium:index')
+        return render(request, self.template_name, {'form': form})
 
 
 class SkillListView(ListView):

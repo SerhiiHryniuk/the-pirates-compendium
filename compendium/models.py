@@ -16,7 +16,7 @@ class DevilFruitType(models.TextChoices):
 
 
 class User(AbstractUser):
-    pass
+    email = models.EmailField(unique=True)
 
 
 class Subscriber(models.Model):
