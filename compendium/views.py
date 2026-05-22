@@ -236,7 +236,7 @@ class DevilFruitPdfView(DetailView):
 
 class MonsterListView(ListView):
     model = Monster
-    template_name = 'compendium/monster_list.html'
+    template_name = 'compendium/monsters_templates/monster_list.html'
     context_object_name = 'monster_list'
     paginate_by = 5
 
@@ -248,7 +248,7 @@ class MonsterListView(ListView):
 
 class MonsterSearchView(ListView):
     model = Monster
-    template_name = 'compendium/monster_search_results.html'
+    template_name = 'compendium/monsters_templates/monster_search_results.html'
     context_object_name = 'monster_list'
     paginate_by = 5
 
@@ -262,7 +262,7 @@ class MonsterSearchView(ListView):
 class MonsterCreateView(CreateView):
     model = Monster
     fields = ['name', 'description', 'origin', 'image', 'health_points', 'armor_class', 'challenge_rating', 'speed', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'skills']
-    template_name = 'compendium/monster_form.html'
+    template_name = 'compendium/monsters_templates/monster_form.html'
     success_url = reverse_lazy('compendium:monster_list')
 
     def get_form(self, form_class=None):
@@ -278,7 +278,7 @@ class MonsterCreateView(CreateView):
 
 class MonsterDetailView(DetailView):
     model = Monster
-    template_name = 'compendium/monster_detail.html'
+    template_name = 'compendium/monsters_templates/monster_detail.html'
     context_object_name = 'monster_detail'
 
     def get_object(self, queryset=None):
@@ -292,7 +292,7 @@ class MonsterDetailView(DetailView):
 class MonsterUpdateView(UpdateView):
     model = Monster
     fields = ['name', 'description', 'origin', 'image', 'health_points', 'armor_class', 'challenge_rating', 'speed', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'skills']
-    template_name = 'compendium/monster_form.html'
+    template_name = 'compendium/monsters_templates/monster_form.html'
     success_url = reverse_lazy('compendium:monster_list')
 
     def get_form(self, form_class=None):
@@ -304,7 +304,7 @@ class MonsterUpdateView(UpdateView):
 
 class MonsterDeleteView(DeleteView):
     model = Monster
-    template_name = 'compendium/monster_delete.html'
+    template_name = 'compendium/monsters_templates/monster_delete.html'
     success_url = reverse_lazy('compendium:monster_list')
 
 
