@@ -370,7 +370,7 @@ class MonsterPdfView(DetailView):
 
 class ScenarioListView(ListView):
     model = Scenario
-    template_name = 'compendium/scenario_list.html'
+    template_name = 'compendium/scenarios_templates/scenario_list.html'
     context_object_name = 'scenario_list'
     paginate_by = 5
 
@@ -382,7 +382,7 @@ class ScenarioListView(ListView):
 
 class ScenarioSearchView(ListView):
     model = Scenario
-    template_name = 'compendium/scenario_search_results.html'
+    template_name = 'compendium/scenarios_templates/scenario_search_results.html'
     context_object_name = 'scenario_list'
     paginate_by = 5
 
@@ -396,7 +396,7 @@ class ScenarioSearchView(ListView):
 class ScenarioCreateView(CreateView):
     model = Scenario
     fields = ['title', 'description', 'starting_hook', 'monsters']
-    template_name = 'compendium/scenario_form.html'
+    template_name = 'compendium/scenarios_templates/scenario_form.html'
     success_url = reverse_lazy('compendium:scenario_list')
 
     def get_form(self, form_class=None):
@@ -412,7 +412,7 @@ class ScenarioCreateView(CreateView):
 
 class ScenarioDetailView(DetailView):
     model = Scenario
-    template_name = 'compendium/scenario_detail.html'
+    template_name = 'compendium/scenarios_templates/scenario_detail.html'
     context_object_name = 'scenario_detail'
 
     def get_object(self, queryset=None):
@@ -426,7 +426,7 @@ class ScenarioDetailView(DetailView):
 class ScenarioUpdateView(UpdateView):
     model = Scenario
     fields = ['title', 'description', 'starting_hook', 'monsters']
-    template_name = 'compendium/scenario_form.html'
+    template_name = 'compendium/scenarios_templates/scenario_form.html'
     success_url = reverse_lazy('compendium:scenario_list')
 
     def get_form(self, form_class=None):
@@ -438,7 +438,7 @@ class ScenarioUpdateView(UpdateView):
 
 class ScenarioDeleteView(DeleteView):
     model = Scenario
-    template_name = 'compendium/scenario_delete.html'
+    template_name = 'compendium/scenarios_templates/scenario_delete.html'
     success_url = reverse_lazy('compendium:scenario_list')
 
 
