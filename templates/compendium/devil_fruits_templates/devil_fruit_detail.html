@@ -1,35 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>The Pirates Compendium - Devil fruit detail</title>
-</head>
-<body>
-  <h1>The Pirates Compendium - Devil fruit detail</h1>
-  {% if user.is_authenticated %}
-    <p>User: {{ user.username }}</p>
-    <form action="{% url "logout" %}" method=post>
-      {% csrf_token %}
-      <input type="hidden" name="next" value="{{ request.path }}" />
-      <button type="submit">Logout</button>
-    </form>
-  {% else %}
-    <a href="{% url "login" %}">Login</a>
-  {% endif %}
-  <br>
-  <a href="{% url "compendium:index" %}">Home</a>
-  <br>
-  <a href="{% url "compendium:skill_list" %}">Skills</a>
-  <br>
-  <a href="{% url "compendium:devil_fruit_list" %}">Devil fruits</a>
-  <br>
-  <a href="{% url "compendium:monster_list" %}">Monsters</a>
-  <br>
-  <a href="{% url "compendium:scenario_list" %}">Scenarios</a>
-  <h2>Devil fruit {{ devil_fruit_detail }}</h2>
-  <h2>View count: {{ devil_fruit_detail.view_count }}</h2>
-  <a href="{% url "compendium:devil_fruit_pdf" slug=devil_fruit_detail.slug %}" target="_blank">
-    Download PDF
-  </a>
-</body>
-</html>
+{% extends "compendium/base.html" %}
+
+{% block title %}{{ devil_fruit_detail.name }} — The Pirates Compendium{% endblock %}
+
+{% block content %}
+
+  <div class="row g-4">
+
+    <div class="col-lg-8">
+      <div class="card border-secondary">
+
+        <div class="card-header border-secondary d-flex justify-content-between align-items-center">
+          <h3 class="mb-0 text-warning">
+            <i class="bi bi-circle-half me-2 text-info"></i>{{ devil_fruit_detail.name }}
+          </h3>
+          <span class="badge bg-secondary">
+            <i class="bi bi-eye me-1"></i>{{ devil_fruit_detail.view_count }} views
+          </span>
+        </div>
+
+        <div class="card-body p-4">
+
+          {% if devil_fruit_detail.image %}
+            <div class="text-center mb-4">
+              <img
+                src="{{ devil_fruit_detail.image.url }}"
+                alt="{{ devil_fruit_detail.name }}"
+                class="rounded border border-secondary"
+                style="max-height: 250px; object-fit: contain;"
+              >
+            </div>
+          {% endif %}
+
+          <div class="mb-4">
+            <span class="badge bg-info text-dark fs-6 px-3 py-2">
+              <i class="bi bi-tag me-1"></i>{{ devil_fruit_detail.fruit_type }}
+            </span>
+          </div>
+
+          <h6 class="text-uppercase text-muted small fw-bold mb-2">Description</h6>
+          <p class="text-light">{{ devil_fruit_detail.description }}</p>
+
+          <hr class="border-secondary">
+
+          {% if devil_fruit_detail.skills.exists %}
+            <h6 class="text-uppercase text-muted small fw-bold mb-3">
+              <i class="bi bi-lightning-charge me-1 text-warning"></i>Skills
+            </h6>
+            <div class="row g-2">
+              {% for skill in devil_fruit_detail.skills.all %}
+                <div class="col-sm-6">
+                  <div class="card border-secondary">
+                    <div class="card-body py-2 px-3">
+                      <a href="{% url 'compendium:skill_detail' slug=skill.slug %}"
+                         class="text-warning fw-semibold">
+                        {{ skill.name }}
+                      </a>
+                      <p class="text-muted small mb-0">
+                        {{ skill.skill_type }}
+                        {% if skill.dmg_dice %} — {{ skill.dmg_dice }}{% endif %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <hr class="border-secondary">
+          {% endif %}
+
+          <p class="text-muted small mb-0">
+            <i class="bi bi-person-circle me-1"></i>
+            Created by <span class="text-light">{{ devil_fruit_detail.author.username }}</span>
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+
+      <div class="card border-secondary">
+        <div class="card-header border-secondary">
+          <h6 class="mb-0 text-muted text-uppercase small fw-bold">Actions</h6>
+        </div>
+        <div class="card-body d-grid gap-2">
+          <a href="{% url 'compendium:devil_fruit_pdf' slug=devil_fruit_detail.slug %}"
+             target="_blank"
+             class="btn btn-outline-warning">
+            <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
+          </a>
+          {% if user == devil_fruit_detail.author %}
+            <a href="{% url 'compendium:devil_fruit_update' slug=devil_fruit_detail.slug %}"
+               class="btn btn-outline-light">
+              <i class="bi bi-pencil me-1"></i>Edit Devil Fruit
+            </a>
+            <a href="{% url 'compendium:devil_fruit_delete' slug=devil_fruit_detail.slug %}"
+               class="btn btn-outline-danger">
+              <i class="bi bi-trash me-1"></i>Delete Devil Fruit
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}
