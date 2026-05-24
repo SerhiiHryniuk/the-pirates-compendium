@@ -169,14 +169,14 @@
       </div>
     </div>
 
-    {% if image_path %}
+    {% if image_data %}
       <div class="right">
-        <img src="file:///{{ image_path }}" alt="{{ fruit.name }}" class="fruit-image">
+        <img src="data:{{ image_content_type }};base64,{{ image_data }}" alt="{{ fruit.name }}" class="fruit-image">
       </div>
     {% endif %}
 
   </div>
-  
+
   <div class="card">
     <div class="card-header">Skills &amp; Abilities</div>
     <div class="card-body">
