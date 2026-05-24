@@ -1,3 +1,6 @@
+import base64
+import requests as http_requests
+
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import F
@@ -158,16 +161,26 @@ class MonsterPdfView(
 
     def render_to_response(self, context, **response_kwargs):
         monster = self.object
-        image_path = monster.image.path.replace(
-            '\\', '/'
-        ) if monster.image else None
+
+        image_data = None
+        image_content_type = None
+        if monster.image:
+            try:
+                img_response = http_requests.get(monster.image.url)
+                image_data = base64.b64encode(img_response.content).decode('utf-8')
+                image_content_type = img_response.headers.get('Content-Type', 'image/jpeg')
+            except Exception:
+                pass
+
         html_content = render_to_string(
             'compendium/monsters_templates/monster_pdf.html',
-            {'monster': monster, 'image_path': image_path}
+            {
+                'monster': monster,
+                'image_data': image_data,
+                'image_content_type': image_content_type,
+            }
         )
         pdf_file = HTML(string=html_content).write_pdf()
         response = HttpResponse(pdf_file, content_type='application/pdf')
-        response['Content-Disposition'] = (
-            f'attachment; filename="monster_{monster.slug}.pdf"'
-        )
+        response['Content-Disposition'] = f'attachment; filename="monster_{monster.slug}.pdf"'
         return response
