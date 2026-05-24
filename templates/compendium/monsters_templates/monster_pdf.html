@@ -210,9 +210,9 @@
       </div>
     </div>
 
-    {% if image_path %}
+    {% if image_data %}
       <div class="right">
-        <img src="file:///{{ image_path }}" alt="{{ monster.name }}" class="monster-image">
+        <img src="data:{{ image_content_type }};base64,{{ image_data }}" alt="{{ monster.name }}" class="monster-image">
       </div>
     {% endif %}
 
