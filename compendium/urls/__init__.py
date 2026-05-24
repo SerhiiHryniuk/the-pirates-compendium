@@ -1,4 +1,10 @@
-from compendium.urls import index_urls, skills_urls, devil_fruits_urls, monsters_urls, scenarios_urls
+from compendium.urls import (
+    index_urls,
+    skills_urls,
+    devil_fruits_urls,
+    monsters_urls,
+    scenarios_urls
+)
 
 app_name = "compendium"
 
