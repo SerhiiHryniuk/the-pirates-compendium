@@ -3,6 +3,8 @@ from django.db.models import F
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.views.generic import (
     ListView,
     DetailView,
@@ -15,6 +17,7 @@ from weasyprint import HTML
 from compendium.models import Skill
 
 
+@method_decorator(never_cache, name='dispatch')
 class SkillListView(ListView):
     model = Skill
     template_name = 'compendium/skills_templates/skill_list.html'
@@ -43,6 +46,7 @@ class SkillSearchView(ListView):
         return Skill.objects.all()
 
 
+@method_decorator(never_cache, name='dispatch')
 class SkillDetailView(DetailView):
     model = Skill
     template_name = 'compendium/skills_templates/skill_detail.html'
