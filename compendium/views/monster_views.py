@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import F
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -39,7 +40,7 @@ class MonsterSearchView(ListView):
         return Monster.objects.all()
 
 
-class MonsterCreateView(CreateView):
+class MonsterCreateView(LoginRequiredMixin, CreateView):
     model = Monster
     fields = ['name', 'description', 'origin', 'image', 'health_points', 'armor_class', 'challenge_rating', 'speed', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'skills']
     template_name = 'compendium/monsters_templates/monster_form.html'
@@ -69,11 +70,15 @@ class MonsterDetailView(DetailView):
         return obj
 
 
-class MonsterUpdateView(UpdateView):
+class MonsterUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Monster
     fields = ['name', 'description', 'origin', 'image', 'health_points', 'armor_class', 'challenge_rating', 'speed', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'skills']
     template_name = 'compendium/monsters_templates/monster_form.html'
     success_url = reverse_lazy('compendium:monster_list')
+
+    def test_func(self):
+        monster = self.get_object()
+        return self.request.user == monster.author
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -82,10 +87,14 @@ class MonsterUpdateView(UpdateView):
         return form
 
 
-class MonsterDeleteView(DeleteView):
+class MonsterDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Monster
     template_name = 'compendium/monsters_templates/monster_delete.html'
     success_url = reverse_lazy('compendium:monster_list')
+
+    def test_func(self):
+        monster = self.get_object()
+        return self.request.user == monster.author
 
 
 class MonsterPdfView(DetailView):
