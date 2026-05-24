@@ -41,15 +41,33 @@
     <h5 class="text-warning mb-3">
       <i class="bi bi-search me-2"></i>Search Skills
     </h5>
-    <input
-      type="text"
-      name="search"
-      class="form-control bg-dark text-light border-secondary"
-      placeholder="Search by name..."
-      hx-get="{% url 'compendium:skill_search' %}"
-      hx-trigger="keyup changed delay:300ms"
-      hx-target="#skill-results"
-    >
+
+    <div class="d-flex gap-3">
+      <input
+          type="text"
+          name="search"
+          class="form-control bg-dark text-light border-secondary"
+          placeholder="Search by name..."
+          hx-get="{% url 'compendium:skill_search' %}"
+          hx-trigger="keyup changed delay:300ms"
+          hx-target="#skill-results"
+          hx-include="[name='skill_type']"
+      >
+
+      <select
+          name="skill_type"
+          class="form-select bg-dark text-light border-secondary w-auto"
+          hx-get="{% url 'compendium:skill_search' %}"
+          hx-trigger="change"
+          hx-target="#skill-results"
+          hx-include="[name='search']"
+      >
+        <option value="">All Types</option>
+        <option value="Attack">Attack</option>
+        <option value="Passive">Passive</option>
+        <option value="Special">Special</option>
+      </select>
+    </div>
   </div>
 
   <div id="skill-results">

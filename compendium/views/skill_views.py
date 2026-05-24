@@ -48,9 +48,13 @@ class SkillSearchView(
 
     def get_queryset(self):
         query = self.request.GET.get('search', '')
+        skill_type = self.request.GET.get('skill_type', '')
+        queryset = Skill.objects.all()
         if query:
-            return Skill.objects.filter(name__icontains=query)
-        return Skill.objects.all()
+            queryset = queryset.filter(name__icontains=query)
+        if skill_type:
+            queryset = queryset.filter(skill_type=skill_type)
+        return queryset
 
 
 @method_decorator(never_cache, name='dispatch')

@@ -38,14 +38,14 @@
       {% if page_obj.has_previous %}
         <li class="page-item">
           <a class="page-link bg-dark text-light border-secondary"
-             href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page=1"
-             hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page=1"
+             href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&skill_type={{ request.GET.skill_type }}&page=1"
+             hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&skill_type={{ request.GET.skill_type }}&page=1"
              hx-target="#skill-results">First</a>
         </li>
         <li class="page-item">
           <a class="page-link bg-dark text-light border-secondary"
-             href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.previous_page_number }}"
-             hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.previous_page_number }}"
+             href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&skill_type={{ request.GET.skill_type }}&page={{ page_obj.previous_page_number }}"
+             hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&skill_type={{ request.GET.skill_type }}&page={{ page_obj.previous_page_number }}"
              hx-target="#skill-results">Previous</a>
         </li>
       {% endif %}
@@ -59,14 +59,14 @@
       {% if page_obj.has_next %}
         <li class="page-item">
           <a class="page-link bg-dark text-light border-secondary"
-             href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.next_page_number }}"
-             hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.next_page_number }}"
+             href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&skill_type={{ request.GET.skill_type }}&page={{ page_obj.next_page_number }}"
+             hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&skill_type={{ request.GET.skill_type }}&page={{ page_obj.next_page_number }}"
              hx-target="#skill-results">Next</a>
         </li>
         <li class="page-item">
           <a class="page-link bg-dark text-light border-secondary"
-             href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.paginator.num_pages }}"
-             hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&page={{ page_obj.paginator.num_pages }}"
+             href="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&skill_type={{ request.GET.skill_type }}&page={{ page_obj.paginator.num_pages }}"
+             hx-get="{% url 'compendium:skill_search' %}?search={{ request.GET.search }}&skill_type={{ request.GET.skill_type }}&page={{ page_obj.paginator.num_pages }}"
              hx-target="#skill-results">Last</a>
         </li>
       {% endif %}
