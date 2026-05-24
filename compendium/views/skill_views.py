@@ -1,5 +1,7 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import F
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -54,7 +56,7 @@ class SkillDetailView(DetailView):
         return obj
 
 
-class SkillCreateView(CreateView):
+class SkillCreateView(LoginRequiredMixin, CreateView):
     model = Skill
     fields = ['name', 'description', 'dmg_dice', 'skill_type']
     template_name = 'compendium/skills_templates/skill_form.html'
@@ -65,17 +67,25 @@ class SkillCreateView(CreateView):
         return super().form_valid(form)
 
 
-class SkillUpdateView(UpdateView):
+class SkillUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Skill
     fields = ['name', 'description', 'dmg_dice', 'skill_type']
     template_name = 'compendium/skills_templates/skill_form.html'
     success_url = reverse_lazy('compendium:skill_list')
 
+    def test_func(self):
+        skill = self.get_object()
+        return self.request.user == skill.author
 
-class SkillDeleteView(DeleteView):
+
+class SkillDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Skill
     template_name = 'compendium/skills_templates/skill_delete.html'
     success_url = reverse_lazy('compendium:skill_list')
+
+    def test_func(self):
+        skill = self.get_object()
+        return self.request.user == skill.author
 
 
 class SkillPdfView(DetailView):
@@ -83,17 +93,7 @@ class SkillPdfView(DetailView):
 
     def render_to_response(self, context, **response_kwargs):
         skill = self.object
-        html_content = f"""
-                <html>
-                <body>
-                    <h1>Skill: {skill.name}</h1>
-                    <p><strong>Damage:</strong> {skill.dmg_dice}</p>
-                    <p><strong>Type:</strong> {skill.skill_type}</p>
-                    <p><strong>Description:</strong> {skill.description}</p>
-                    <p><strong>Author:</strong> {skill.author.username}</p>
-                </body>
-                </html>
-                """
+        html_content = render_to_string('compendium/skills_templates/skill_pdf.html', {'skill': skill})
         pdf_file = HTML(string=html_content).write_pdf()
         response = HttpResponse(pdf_file, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="skill_{skill.slug}.pdf"'
