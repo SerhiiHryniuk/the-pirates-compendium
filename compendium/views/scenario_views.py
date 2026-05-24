@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.mail import send_mass_mail
 from django.db.models import F
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -15,7 +16,8 @@ from django.views.generic import (
 )
 from weasyprint import HTML
 
-from compendium.models import Scenario, Monster
+from compendium.models import Scenario, Monster, Subscriber
+from config import settings
 
 
 @method_decorator(never_cache, name='dispatch')
@@ -50,6 +52,21 @@ class ScenarioCreateView(LoginRequiredMixin, CreateView):
     template_name = 'compendium/scenarios_templates/scenario_form.html'
     success_url = reverse_lazy('compendium:scenario_list')
 
+    def notify_subscribers(self, scenario):
+        emails = list(Subscriber.objects.values_list('email', flat=True))
+        if not emails: return
+        subject = f"[Pirates Compendium] New Scenario: {scenario.title}"
+        message = (
+            f"A new scenario has been added!\n\n"
+            f"Title: {scenario.title}\n\n"
+            f"Description:\n{scenario.description}\n\n"
+            f"Starting Hook:\n{scenario.starting_hook}\n\n"
+            f"View it here: {settings.SITE_URL}/compendium/scenario/{scenario.slug}/"
+        )
+        from_email = "no-reply@pirates-compendium.com"
+        email_tuples = tuple((subject, message, from_email, [email]) for email in emails)
+        send_mass_mail(email_tuples, fail_silently=True)
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields['monsters'].widget = forms.CheckboxSelectMultiple()
@@ -58,7 +75,9 @@ class ScenarioCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        self.notify_subscribers(self.object)
+        return response
 
 
 @method_decorator(never_cache, name='dispatch')
