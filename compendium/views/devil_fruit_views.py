@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import F
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -112,27 +113,8 @@ class DevilFruitPdfView(DetailView):
 
     def render_to_response(self, context, **response_kwargs):
         fruit = self.object
-        image_html = ""
-        if fruit.image:
-            clean_path = fruit.image.path.replace('\\', '/')
-            image_html = f'<img src="file:///{clean_path}" style="max-width: 250px; height: auto; display: block; margin: 10px 0;">'
-        skills_html = "".join([f"<li>{skill.name}</li>" for skill in fruit.skills.all()])
-        html_content = f"""
-        <html>
-        <body>
-            <h1>{fruit.name}</h1>
-            <p>Type: {fruit.fruit_type}</p>
-            <p>Description: {fruit.description}</p>
-
-            {image_html}
-
-            <h3>Skills:</h3>
-            <ul>
-                {skills_html}
-            </ul>
-        </body>
-        </html>
-        """
+        image_path = fruit.image.path.replace('\\', '/') if fruit.image else None
+        html_content = render_to_string('compendium/devil_fruits_templates/devil_fruit_pdf.html', {'fruit': fruit, 'image_path': image_path})
         pdf_file = HTML(string=html_content).write_pdf()
         response = HttpResponse(pdf_file, content_type="application/pdf")
         response['Content-Disposition'] = f'attachment; filename="skill_{fruit.slug}.pdf"'
