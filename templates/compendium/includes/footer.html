@@ -39,10 +39,44 @@
       </div>
 
       <div class="col-md-4">
-        <h6 class="text-uppercase text-muted small fw-bold mb-3">Connect</h6>
+        <h6 class="text-uppercase text-muted small fw-bold mb-3">
+          <i class="bi bi-envelope me-1"></i>Newsletter
+        </h6>
+        <p class="text-muted small mb-2">Get notified when new scenarios drop.</p>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert py-1 px-2 small mb-2
+        {% if message.tags == 'success' %}alert-success
+        {% elif message.tags == 'error' %}alert-danger
+        {% else %}alert-info{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <form action="{% url 'compendium:subscribe' %}" method="post" class="d-flex gap-2 mb-3">
+          {% csrf_token %}
+          <input
+              type="email"
+              name="email"
+              placeholder="your@email.com"
+              required
+              class="form-control form-control-sm bg-dark text-light border-secondary"
+          >
+          <button type="submit" class="btn btn-warning btn-sm text-nowrap">
+            Subscribe
+          </button>
+        </form>
+
+        <h6 class="text-uppercase text-muted small fw-bold mb-2">Connect</h6>
         <div class="d-flex gap-3 fs-4">
-          <a href="https://github.com/SerhiiHryniuk/the-pirates-compendium" class="text-muted" title="GitHub"><i class="bi bi-github"></i></a>
-          <a href="https://www.linkedin.com/in/serhii-hryniuk-7a3902271/" class="text-muted" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          <a href="https://github.com/SerhiiHryniuk/the-pirates-compendium" class="text-muted" title="GitHub">
+            <i class="bi bi-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/serhii-hryniuk-7a3902271/" class="text-muted" title="LinkedIn">
+            <i class="bi bi-linkedin"></i>
+          </a>
         </div>
       </div>
 
