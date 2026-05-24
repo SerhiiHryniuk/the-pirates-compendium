@@ -39,17 +39,35 @@
 
   <div class="mb-4">
     <h5 class="text-warning mb-3">
-      <i class="bi bi-search me-2"></i>Search Devil Fruits
+      <i class="bi bi-search me-2"></i>Search Devil Fruit
     </h5>
-    <input
-      type="text"
-      name="search"
-      class="form-control bg-dark text-light border-secondary"
-      placeholder="Search by name..."
-      hx-get="{% url 'compendium:devil_fruit_search' %}"
-      hx-trigger="keyup changed delay:300ms"
-      hx-target="#devil-fruit-results"
-    >
+
+    <div class="d-flex gap-3">
+      <input
+          type="text"
+          name="search"
+          class="form-control bg-dark text-light border-secondary"
+          placeholder="Search by name..."
+          hx-get="{% url 'compendium:devil_fruit_search' %}"
+          hx-trigger="keyup changed delay:300ms"
+          hx-target="#devil-fruit-results"
+          hx-include="[name='fruit_type']"
+      >
+
+      <select
+          name="fruit_type"
+          class="form-select bg-dark text-light border-secondary w-auto"
+          hx-get="{% url 'compendium:devil_fruit_search' %}"
+          hx-trigger="change"
+          hx-target="#devil-fruit-results"
+          hx-include="[name='search']"
+      >
+        <option value="">All Types</option>
+        <option value="Logia">Logia</option>
+        <option value="Paramecia">Paramecia</option>
+        <option value="Zoan">Zoan</option>
+      </select>
+    </div>
   </div>
 
   <div id="devil-fruit-results">

@@ -55,15 +55,14 @@ class DevilFruitSearchView(
     paginate_by = 5
 
     def get_queryset(self):
-        query = self.request.GET.get(
-            'search',
-            ''
-        )
+        query = self.request.GET.get('search', '')
+        fruit_type = self.request.GET.get('fruit_type', '')
+        queryset = DevilFruit.objects.all()
         if query:
-            return DevilFruit.objects.filter(
-                name__icontains=query
-            )
-        return DevilFruit.objects.all()
+            queryset = queryset.filter(name__icontains=query)
+        if fruit_type:
+            queryset = queryset.filter(fruit_type=fruit_type)
+        return queryset
 
 
 class DevilFruitCreateView(

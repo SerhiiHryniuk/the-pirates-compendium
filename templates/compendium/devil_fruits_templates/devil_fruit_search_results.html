@@ -47,14 +47,14 @@
       {% if page_obj.has_previous %}
         <li class="page-item">
           <a class="page-link bg-dark text-light border-secondary"
-             href="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&page=1"
-             hx-get="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&page=1"
+             href="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&fruit_type={{ request.GET.fruit_type }}&page=1"
+             hx-get="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&fruit_type={{ request.GET.fruit_type }}&page=1"
              hx-target="#devil-fruit-results">First</a>
         </li>
         <li class="page-item">
           <a class="page-link bg-dark text-light border-secondary"
-             href="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&page={{ page_obj.previous_page_number }}"
-             hx-get="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&page={{ page_obj.previous_page_number }}"
+             href="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&fruit_type={{ request.GET.fruit_type }}&page={{ page_obj.previous_page_number }}"
+             hx-get="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&fruit_type={{ request.GET.fruit_type }}&page={{ page_obj.previous_page_number }}"
              hx-target="#devil-fruit-results">Previous</a>
         </li>
       {% endif %}
@@ -68,14 +68,14 @@
       {% if page_obj.has_next %}
         <li class="page-item">
           <a class="page-link bg-dark text-light border-secondary"
-             href="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&page={{ page_obj.next_page_number }}"
-             hx-get="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&page={{ page_obj.next_page_number }}"
+             href="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&fruit_type={{ request.GET.fruit_type }}&page={{ page_obj.next_page_number }}"
+             hx-get="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&fruit_type={{ request.GET.fruit_type }}&page={{ page_obj.next_page_number }}"
              hx-target="#devil-fruit-results">Next</a>
         </li>
         <li class="page-item">
           <a class="page-link bg-dark text-light border-secondary"
-             href="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&page={{ page_obj.paginator.num_pages }}"
-             hx-get="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&page={{ page_obj.paginator.num_pages }}"
+             href="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&fruit_type={{ request.GET.fruit_type }}&page={{ page_obj.paginator.num_pages }}"
+             hx-get="{% url 'compendium:devil_fruit_search' %}?search={{ request.GET.search }}&fruit_type={{ request.GET.fruit_type }}&page={{ page_obj.paginator.num_pages }}"
              hx-target="#devil-fruit-results">Last</a>
         </li>
       {% endif %}
@@ -83,5 +83,5 @@
   </nav>
 
 {% else %}
-  <p class="text-muted fst-italic">No monsters found.</p>
+  <p class="text-muted fst-italic">No devil fruit found.</p>
 {% endif %}
