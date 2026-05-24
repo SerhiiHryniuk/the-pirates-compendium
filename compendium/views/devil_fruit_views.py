@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import F
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -49,7 +50,7 @@ class DevilFruitSearchView(ListView):
         return DevilFruit.objects.all()
 
 
-class DevilFruitCreateView(CreateView):
+class DevilFruitCreateView(LoginRequiredMixin, CreateView):
     model = DevilFruit
     fields = ['name', 'fruit_type', 'description', 'image', 'skills']
     template_name = 'compendium/devil_fruits_templates/devil_fruit_form.html'
@@ -79,11 +80,15 @@ class DevilFruitDetailView(DetailView):
         return obj
 
 
-class DevilFruitUpdateView(UpdateView):
+class DevilFruitUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = DevilFruit
     fields = ['name', 'fruit_type', 'description', 'image', 'skills']
     template_name = 'compendium/devil_fruits_templates/devil_fruit_form.html'
     success_url = reverse_lazy('compendium:devil_fruit_list')
+
+    def test_func(self):
+        devil_fruit = self.get_object()
+        return self.request.user == devil_fruit.author
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -92,10 +97,14 @@ class DevilFruitUpdateView(UpdateView):
         return form
 
 
-class DevilFruitDeleteView(DeleteView):
+class DevilFruitDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = DevilFruit
     template_name = 'compendium/devil_fruits_templates/devil_fruit_delete.html'
     success_url = reverse_lazy('compendium:devil_fruit_list')
+
+    def test_func(self):
+        devil_fruit = self.get_object()
+        return self.request.user == devil_fruit.author
 
 
 class DevilFruitPdfView(DetailView):
