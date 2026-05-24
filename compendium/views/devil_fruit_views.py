@@ -1,3 +1,6 @@
+import base64
+import requests as http_requests
+
 from django import forms
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
@@ -144,22 +147,31 @@ class DevilFruitDeleteView(
         return self.request.user == devil_fruit.author
 
 
-class DevilFruitPdfView(
-    DetailView
-):
+class DevilFruitPdfView(DetailView):
     model = DevilFruit
 
     def render_to_response(self, context, **response_kwargs):
         fruit = self.object
-        image_path = fruit.image.path.replace(
-            '\\', '/'
-        ) if fruit.image else None
+
+        image_data = None
+        image_content_type = None
+        if fruit.image:
+            try:
+                img_response = http_requests.get(fruit.image.url)
+                image_data = base64.b64encode(img_response.content).decode('utf-8')
+                image_content_type = img_response.headers.get('Content-Type', 'image/jpeg')
+            except Exception:
+                pass
+
         html_content = render_to_string(
             'compendium/devil_fruits_templates/devil_fruit_pdf.html',
-            {'fruit': fruit, 'image_path': image_path})
-        pdf_file = HTML(string=html_content).write_pdf()
-        response = HttpResponse(pdf_file, content_type="application/pdf")
-        response['Content-Disposition'] = (
-            f'attachment; filename="skill_{fruit.slug}.pdf"'
+            {
+                'fruit': fruit,
+                'image_data': image_data,
+                'image_content_type': image_content_type,
+            }
         )
+        pdf_file = HTML(string=html_content).write_pdf()
+        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="devil_fruit_{fruit.slug}.pdf"'
         return response
