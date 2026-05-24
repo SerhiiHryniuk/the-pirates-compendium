@@ -1,4 +1,6 @@
 import os
+
+import cloudinary
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -28,7 +30,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
     'compendium',
     'django.contrib.sites',
     'allauth',
@@ -163,3 +167,7 @@ else:
     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 SITE_URL = os.getenv('SITE_URL')
+
+cloudinary.config(url=os.environ.get('CLOUDINARY_URL'))
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
