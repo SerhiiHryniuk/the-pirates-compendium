@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import F
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -102,21 +103,7 @@ class ScenarioPdfView(DetailView):
 
     def render_to_response(self, context, **response_kwargs):
         scenario = self.object
-        monsters_html = "".join([f"<li>{monster.name}</li>" for monster in scenario.monsters.all()])
-        html_content = f"""
-        <html>
-        <body>
-            <h1>{scenario.title}</h1>
-            <p>Description: {scenario.description}</p>
-            <p>Starting Hook: {scenario.starting_hook}</p>
-
-            <h3>Monsters:</h3>
-            <ul>
-                {monsters_html}
-            </ul>
-        </body>
-        </html>
-        """
+        html_content = render_to_string('compendium/scenarios_templates/scenario_pdf.html', {'scenario': scenario})
         pdf_file = HTML(string=html_content).write_pdf()
         response = HttpResponse(pdf_file, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="scenario_{scenario.slug}.pdf"'
