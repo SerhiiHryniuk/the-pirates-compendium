@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import F
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -39,7 +40,7 @@ class ScenarioSearchView(ListView):
         return Scenario.objects.all()
 
 
-class ScenarioCreateView(CreateView):
+class ScenarioCreateView(LoginRequiredMixin, CreateView):
     model = Scenario
     fields = ['title', 'description', 'starting_hook', 'monsters']
     template_name = 'compendium/scenarios_templates/scenario_form.html'
@@ -69,11 +70,15 @@ class ScenarioDetailView(DetailView):
         return obj
 
 
-class ScenarioUpdateView(UpdateView):
+class ScenarioUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Scenario
     fields = ['title', 'description', 'starting_hook', 'monsters']
     template_name = 'compendium/scenarios_templates/scenario_form.html'
     success_url = reverse_lazy('compendium:scenario_list')
+
+    def test_func(self):
+        scenario = self.get_object()
+        return self.request.user == scenario.author
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -82,10 +87,14 @@ class ScenarioUpdateView(UpdateView):
         return form
 
 
-class ScenarioDeleteView(DeleteView):
+class ScenarioDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Scenario
     template_name = 'compendium/scenarios_templates/scenario_delete.html'
     success_url = reverse_lazy('compendium:scenario_list')
+
+    def test_func(self):
+        scenario = self.get_object()
+        return self.request.user == scenario.author
 
 
 class ScenarioPdfView(DetailView):
