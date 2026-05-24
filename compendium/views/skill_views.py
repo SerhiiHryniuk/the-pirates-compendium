@@ -1,4 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    UserPassesTestMixin
+)
 from django.db.models import F
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -18,7 +21,9 @@ from compendium.models import Skill
 
 
 @method_decorator(never_cache, name='dispatch')
-class SkillListView(ListView):
+class SkillListView(
+    ListView
+):
     model = Skill
     template_name = 'compendium/skills_templates/skill_list.html'
     context_object_name = 'skill_list'
@@ -33,7 +38,9 @@ class SkillListView(ListView):
         return context
 
 
-class SkillSearchView(ListView):
+class SkillSearchView(
+    ListView
+):
     model = Skill
     template_name = 'compendium/skills_templates/skill_search_results.html'
     context_object_name = 'skill_list'
@@ -47,7 +54,9 @@ class SkillSearchView(ListView):
 
 
 @method_decorator(never_cache, name='dispatch')
-class SkillDetailView(DetailView):
+class SkillDetailView(
+    DetailView
+):
     model = Skill
     template_name = 'compendium/skills_templates/skill_detail.html'
     context_object_name = 'skill_detail'
@@ -60,7 +69,10 @@ class SkillDetailView(DetailView):
         return obj
 
 
-class SkillCreateView(LoginRequiredMixin, CreateView):
+class SkillCreateView(
+    LoginRequiredMixin,
+    CreateView
+):
     model = Skill
     fields = ['name', 'description', 'dmg_dice', 'skill_type']
     template_name = 'compendium/skills_templates/skill_form.html'
@@ -71,7 +83,11 @@ class SkillCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class SkillUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class SkillUpdateView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    UpdateView
+):
     model = Skill
     fields = ['name', 'description', 'dmg_dice', 'skill_type']
     template_name = 'compendium/skills_templates/skill_form.html'
@@ -82,7 +98,11 @@ class SkillUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user == skill.author
 
 
-class SkillDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class SkillDeleteView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    DeleteView
+):
     model = Skill
     template_name = 'compendium/skills_templates/skill_delete.html'
     success_url = reverse_lazy('compendium:skill_list')
@@ -92,13 +112,20 @@ class SkillDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == skill.author
 
 
-class SkillPdfView(DetailView):
+class SkillPdfView(
+    DetailView
+):
     model = Skill
 
     def render_to_response(self, context, **response_kwargs):
         skill = self.object
-        html_content = render_to_string('compendium/skills_templates/skill_pdf.html', {'skill': skill})
+        html_content = render_to_string(
+            'compendium/skills_templates/skill_pdf.html',
+            {'skill': skill}
+        )
         pdf_file = HTML(string=html_content).write_pdf()
         response = HttpResponse(pdf_file, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="skill_{skill.slug}.pdf"'
+        response['Content-Disposition'] = (
+            f'attachment; filename="skill_{skill.slug}.pdf"'
+        )
         return response

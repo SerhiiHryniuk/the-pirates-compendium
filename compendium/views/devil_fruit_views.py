@@ -1,5 +1,8 @@
 from django import forms
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    UserPassesTestMixin
+)
 from django.db.models import F
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -22,9 +25,12 @@ from compendium.models import (
 
 
 @method_decorator(never_cache, name='dispatch')
-class DevilFruitListView(ListView):
+class DevilFruitListView(
+    ListView
+):
     model = DevilFruit
-    template_name = 'compendium/devil_fruits_templates/devil_fruit_list.html'
+    template_name = ('compendium/devil_fruits_templates/'
+                     'devil_fruit_list.html')
     context_object_name = 'devil_fruit_list'
     paginate_by = 5
 
@@ -36,9 +42,12 @@ class DevilFruitListView(ListView):
         return context
 
 
-class DevilFruitSearchView(ListView):
+class DevilFruitSearchView(
+    ListView
+):
     model = DevilFruit
-    template_name = 'compendium/devil_fruits_templates/devil_fruit_search_results.html'
+    template_name = ('compendium/devil_fruits_templates/'
+                     'devil_fruit_search_results.html')
     context_object_name = 'devil_fruit_list'
     paginate_by = 5
 
@@ -54,11 +63,17 @@ class DevilFruitSearchView(ListView):
         return DevilFruit.objects.all()
 
 
-class DevilFruitCreateView(LoginRequiredMixin, CreateView):
+class DevilFruitCreateView(
+    LoginRequiredMixin,
+    CreateView
+):
     model = DevilFruit
     fields = ['name', 'fruit_type', 'description', 'image', 'skills']
-    template_name = 'compendium/devil_fruits_templates/devil_fruit_form.html'
-    success_url = reverse_lazy('compendium:devil_fruit_list')
+    template_name = ('compendium/devil_fruits_templates/'
+                     'devil_fruit_form.html')
+    success_url = reverse_lazy(
+        'compendium:devil_fruit_list'
+    )
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -72,9 +87,12 @@ class DevilFruitCreateView(LoginRequiredMixin, CreateView):
 
 
 @method_decorator(never_cache, name='dispatch')
-class DevilFruitDetailView(DetailView):
+class DevilFruitDetailView(
+    DetailView
+):
     model = DevilFruit
-    template_name = 'compendium/devil_fruits_templates/devil_fruit_detail.html'
+    template_name = ('compendium/devil_fruits_templates/'
+                     'devil_fruit_detail.html')
     context_object_name = 'devil_fruit_detail'
 
     def get_object(self, queryset=None):
@@ -85,11 +103,18 @@ class DevilFruitDetailView(DetailView):
         return obj
 
 
-class DevilFruitUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class DevilFruitUpdateView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    UpdateView
+):
     model = DevilFruit
     fields = ['name', 'fruit_type', 'description', 'image', 'skills']
-    template_name = 'compendium/devil_fruits_templates/devil_fruit_form.html'
-    success_url = reverse_lazy('compendium:devil_fruit_list')
+    template_name = ('compendium/devil_fruits_templates/'
+                     'devil_fruit_form.html')
+    success_url = reverse_lazy(
+        'compendium:devil_fruit_list'
+    )
 
     def test_func(self):
         devil_fruit = self.get_object()
@@ -102,24 +127,39 @@ class DevilFruitUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return form
 
 
-class DevilFruitDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class DevilFruitDeleteView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    DeleteView
+):
     model = DevilFruit
-    template_name = 'compendium/devil_fruits_templates/devil_fruit_delete.html'
-    success_url = reverse_lazy('compendium:devil_fruit_list')
+    template_name = ('compendium/devil_fruits_templates/'
+                     'devil_fruit_delete.html')
+    success_url = reverse_lazy(
+        'compendium:devil_fruit_list'
+    )
 
     def test_func(self):
         devil_fruit = self.get_object()
         return self.request.user == devil_fruit.author
 
 
-class DevilFruitPdfView(DetailView):
+class DevilFruitPdfView(
+    DetailView
+):
     model = DevilFruit
 
     def render_to_response(self, context, **response_kwargs):
         fruit = self.object
-        image_path = fruit.image.path.replace('\\', '/') if fruit.image else None
-        html_content = render_to_string('compendium/devil_fruits_templates/devil_fruit_pdf.html', {'fruit': fruit, 'image_path': image_path})
+        image_path = fruit.image.path.replace(
+            '\\', '/'
+        ) if fruit.image else None
+        html_content = render_to_string(
+            'compendium/devil_fruits_templates/devil_fruit_pdf.html',
+            {'fruit': fruit, 'image_path': image_path})
         pdf_file = HTML(string=html_content).write_pdf()
         response = HttpResponse(pdf_file, content_type="application/pdf")
-        response['Content-Disposition'] = f'attachment; filename="skill_{fruit.slug}.pdf"'
+        response['Content-Disposition'] = (
+            f'attachment; filename="skill_{fruit.slug}.pdf"'
+        )
         return response

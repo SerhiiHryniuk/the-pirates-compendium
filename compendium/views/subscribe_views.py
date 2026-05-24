@@ -15,9 +15,18 @@ class SubscribeView(View):
             email = form.cleaned_data['email']
             _, created = Subscriber.objects.get_or_create(email=email)
             if created:
-                messages.success(request, "You're subscribed! You'll get notified on new scenarios.")
+                messages.success(
+                    request,
+                    "You're subscribed! You'll get notified on new scenarios."
+                )
             else:
-                messages.info(request, "This email is already subscribed.")
+                messages.info(
+                    request,
+                    "This email is already subscribed."
+                )
         else:
-            messages.error(request, "Please enter a valid email address.")
+            messages.error(
+                request,
+                "Please enter a valid email address."
+            )
         return redirect(request.META.get('HTTP_REFERER', '/'))

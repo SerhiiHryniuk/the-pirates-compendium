@@ -1,5 +1,8 @@
 from django import forms
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    UserPassesTestMixin
+)
 from django.core.mail import send_mass_mail
 from django.db.models import F
 from django.http import HttpResponse
@@ -21,7 +24,9 @@ from config import settings
 
 
 @method_decorator(never_cache, name='dispatch')
-class ScenarioListView(ListView):
+class ScenarioListView(
+    ListView
+):
     model = Scenario
     template_name = 'compendium/scenarios_templates/scenario_list.html'
     context_object_name = 'scenario_list'
@@ -29,13 +34,18 @@ class ScenarioListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['top_scenarios'] = Scenario.objects.order_by('-view_count', 'title')[:3]
+        context['top_scenarios'] = Scenario.objects.order_by(
+            '-view_count', 'title'
+        )[:3]
         return context
 
 
-class ScenarioSearchView(ListView):
+class ScenarioSearchView(
+    ListView
+):
     model = Scenario
-    template_name = 'compendium/scenarios_templates/scenario_search_results.html'
+    template_name = ('compendium/scenarios_templates/'
+                     'scenario_search_results.html')
     context_object_name = 'scenario_list'
     paginate_by = 5
 
@@ -46,15 +56,20 @@ class ScenarioSearchView(ListView):
         return Scenario.objects.all()
 
 
-class ScenarioCreateView(LoginRequiredMixin, CreateView):
+class ScenarioCreateView(
+    LoginRequiredMixin,
+    CreateView
+):
     model = Scenario
     fields = ['title', 'description', 'starting_hook', 'monsters']
-    template_name = 'compendium/scenarios_templates/scenario_form.html'
+    template_name = ('compendium/scenarios_templates/'
+                     'scenario_form.html')
     success_url = reverse_lazy('compendium:scenario_list')
 
     def notify_subscribers(self, scenario):
         emails = list(Subscriber.objects.values_list('email', flat=True))
-        if not emails: return
+        if not emails:
+            return
         subject = f"[Pirates Compendium] New Scenario: {scenario.title}"
         message = (
             f"A new scenario has been added!\n\n"
@@ -64,7 +79,9 @@ class ScenarioCreateView(LoginRequiredMixin, CreateView):
             f"View it here: {settings.SITE_URL}/compendium/scenario/{scenario.slug}/"
         )
         from_email = "no-reply@pirates-compendium.com"
-        email_tuples = tuple((subject, message, from_email, [email]) for email in emails)
+        email_tuples = tuple(
+            (subject, message, from_email, [email]) for email in emails
+        )
         send_mass_mail(email_tuples, fail_silently=True)
 
     def get_form(self, form_class=None):
@@ -81,9 +98,12 @@ class ScenarioCreateView(LoginRequiredMixin, CreateView):
 
 
 @method_decorator(never_cache, name='dispatch')
-class ScenarioDetailView(DetailView):
+class ScenarioDetailView(
+    DetailView
+):
     model = Scenario
-    template_name = 'compendium/scenarios_templates/scenario_detail.html'
+    template_name = ('compendium/scenarios_templates/'
+                     'scenario_detail.html')
     context_object_name = 'scenario_detail'
 
     def get_object(self, queryset=None):
@@ -94,10 +114,15 @@ class ScenarioDetailView(DetailView):
         return obj
 
 
-class ScenarioUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class ScenarioUpdateView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    UpdateView
+):
     model = Scenario
     fields = ['title', 'description', 'starting_hook', 'monsters']
-    template_name = 'compendium/scenarios_templates/scenario_form.html'
+    template_name = ('compendium/scenarios_templates/'
+                     'scenario_form.html')
     success_url = reverse_lazy('compendium:scenario_list')
 
     def test_func(self):
@@ -111,9 +136,14 @@ class ScenarioUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return form
 
 
-class ScenarioDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class ScenarioDeleteView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    DeleteView
+):
     model = Scenario
-    template_name = 'compendium/scenarios_templates/scenario_delete.html'
+    template_name = ('compendium/scenarios_templates/'
+                     'scenario_delete.html')
     success_url = reverse_lazy('compendium:scenario_list')
 
     def test_func(self):
@@ -121,13 +151,20 @@ class ScenarioDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == scenario.author
 
 
-class ScenarioPdfView(DetailView):
+class ScenarioPdfView(
+    DetailView
+):
     model = Scenario
 
     def render_to_response(self, context, **response_kwargs):
         scenario = self.object
-        html_content = render_to_string('compendium/scenarios_templates/scenario_pdf.html', {'scenario': scenario})
+        html_content = render_to_string(
+            'compendium/scenarios_templates/scenario_pdf.html',
+            {'scenario': scenario}
+        )
         pdf_file = HTML(string=html_content).write_pdf()
         response = HttpResponse(pdf_file, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="scenario_{scenario.slug}.pdf"'
+        response['Content-Disposition'] = (
+            f'attachment; filename="scenario_{scenario.slug}.pdf"'
+        )
         return response
