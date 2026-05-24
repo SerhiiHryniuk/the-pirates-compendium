@@ -4,6 +4,8 @@ from django.db.models import F
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.views.generic import (
     ListView,
     CreateView,
@@ -19,6 +21,7 @@ from compendium.models import (
 )
 
 
+@method_decorator(never_cache, name='dispatch')
 class DevilFruitListView(ListView):
     model = DevilFruit
     template_name = 'compendium/devil_fruits_templates/devil_fruit_list.html'
@@ -68,6 +71,7 @@ class DevilFruitCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(never_cache, name='dispatch')
 class DevilFruitDetailView(DetailView):
     model = DevilFruit
     template_name = 'compendium/devil_fruits_templates/devil_fruit_detail.html'
