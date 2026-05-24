@@ -4,6 +4,8 @@ from django.db.models import F
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.views.generic import (
     ListView,
     CreateView,
@@ -16,6 +18,7 @@ from weasyprint import HTML
 from compendium.models import Scenario, Monster
 
 
+@method_decorator(never_cache, name='dispatch')
 class ScenarioListView(ListView):
     model = Scenario
     template_name = 'compendium/scenarios_templates/scenario_list.html'
@@ -58,6 +61,7 @@ class ScenarioCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(never_cache, name='dispatch')
 class ScenarioDetailView(DetailView):
     model = Scenario
     template_name = 'compendium/scenarios_templates/scenario_detail.html'
