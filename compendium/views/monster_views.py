@@ -4,6 +4,8 @@ from django.db.models import F
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.views.generic import (
     ListView,
     CreateView,
@@ -16,6 +18,7 @@ from weasyprint import HTML
 from compendium.models import Monster, Skill
 
 
+@method_decorator(never_cache, name='dispatch')
 class MonsterListView(ListView):
     model = Monster
     template_name = 'compendium/monsters_templates/monster_list.html'
@@ -58,6 +61,7 @@ class MonsterCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(never_cache, name='dispatch')
 class MonsterDetailView(DetailView):
     model = Monster
     template_name = 'compendium/monsters_templates/monster_detail.html'
