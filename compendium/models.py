@@ -18,10 +18,16 @@ class DevilFruitType(models.TextChoices):
 class User(AbstractUser):
     email = models.EmailField(unique=True)
 
+    def __str__(self):
+        return self.username
+
 
 class Subscriber(models.Model):
     email = models.EmailField(unique=True)
     subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
 
 
 class Skill(models.Model):
@@ -45,7 +51,7 @@ class Skill(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name}: {self.dmg_dice}, {self.skill_type}, {self.description[:25]}..."
+        return f"{self.name}: {self.dmg_dice}, {self.skill_type}"
 
 
 class DevilFruit(models.Model):
@@ -70,7 +76,7 @@ class DevilFruit(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name}: {self.fruit_type}, {self.description[:25]}..."
+        return f"{self.name}: {self.fruit_type}"
 
 
 class Monster(models.Model):
@@ -102,7 +108,7 @@ class Monster(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name}: {self.description[:25]}..."
+        return f"{self.name}"
 
 class Scenario(models.Model):
     title = models.CharField(max_length=255)
@@ -122,4 +128,4 @@ class Scenario(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.title}: {self.description[:25]}..."
+        return f"{self.title}"
