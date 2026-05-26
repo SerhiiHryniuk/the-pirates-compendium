@@ -7,6 +7,7 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -94,6 +95,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
@@ -116,6 +118,7 @@ else:
         }
     }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -134,6 +137,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -145,6 +149,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+
 # Static and Media Files Configuration (Django 6.0+ & Cloudinary)
 # https://docs.djangoproject.com/en/6.0/ref/settings/#storages
 
@@ -153,22 +158,27 @@ MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'compendium.User'
 
+# Auth & Registration Routing
 LOGIN_REDIRECT_URL = '/'
 LOGIN_CANCELLED_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
+# django-allauth Production Safeguards
+ACCOUNT_EMAIL_VERIFICATION = 'none'         # Prevents registration 500 errors by bypassing strict SMTP loops
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'     # Directs Google OAuth to build secure production callback links
+
+# Social Authentication Providers
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
     }
 }
-
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_LOGIN_CANCELLED_URL = '/'
 
+# Email Backend Settings
 DEBUG_EMAIL = os.getenv('DEBUG_EMAIL', 'False') == 'True'
 
 if DEBUG_EMAIL:
