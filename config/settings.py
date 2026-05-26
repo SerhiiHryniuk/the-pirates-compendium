@@ -1,13 +1,11 @@
 import os
-
-from dotenv import load_dotenv
 from pathlib import Path
+from dotenv import load_dotenv
 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -82,8 +80,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -96,7 +93,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -120,7 +116,6 @@ else:
         }
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -139,7 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -151,18 +145,16 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
+# Static and Media Files Configuration (Django 6.0+ & Cloudinary)
+# https://docs.djangoproject.com/en/6.0/ref/settings/#storages
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'compendium.User'
 
 LOGIN_REDIRECT_URL = '/'
-
 LOGIN_CANCELLED_URL = '/'
-
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
@@ -175,7 +167,6 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
-
 SOCIALACCOUNT_LOGIN_CANCELLED_URL = '/'
 
 DEBUG_EMAIL = os.getenv('DEBUG_EMAIL', 'False') == 'True'
@@ -192,14 +183,26 @@ else:
 
 SITE_URL = os.getenv('SITE_URL')
 
+# Cloudinary Integration Using modern Django 6 `STORAGES` dictionary
 CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
 if CLOUDINARY_URL:
     import cloudinary
     import cloudinary_storage
 
     cloudinary.config(url=CLOUDINARY_URL)
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    MEDIA_URL = '/media/'
+
+    # Modern Django 6 syntax
+    STORAGES = {
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "cloudinary_storage.storage.StaticCloudinaryStorage",
+        },
+    }
+
+    # Critical Django 6 backwards-compatibility fallback for third-party scripts
+    STATICFILES_STORAGE = "cloudinary_storage.storage.StaticCloudinaryStorage"
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 else:
     MEDIA_ROOT = BASE_DIR / 'media'
-    MEDIA_URL = '/media/'
