@@ -1,6 +1,5 @@
 import os
 
-import cloudinary
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -14,13 +13,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qqzj24360$(%bksfyei&wf-25325*hclpu!fm=_a+nb^s)&tyn'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-qqzj24360$(%bksfyei&wf-25325*hclpu!fm=_a+nb^s)&tyn')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+if 'RENDER' in os.environ:
+    # Tell Django that Render is handling the SSL proxy
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    # Enforce HTTPS redirect
+    SECURE_SSL_REDIRECT = True
+
+    # Secure your cookies
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # HTTP Strict Transport Security (HSTS)
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
 # Application definition
 
@@ -83,12 +101,24 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['POSTGRES_DB'],
+            'USER': os.environ['POSTGRES_USER'],
+            'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+            'HOST': os.environ['POSTGRES_HOST'],
+            'PORT': int(os.environ['POSTGRES_DB_PORT'])
+        }
+    }
 
 
 # Password validation
@@ -129,15 +159,13 @@ STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = 'compendium.User'
 
-LOGIN_REDIRECT_URL = '/compendium/'
+LOGIN_REDIRECT_URL = '/'
 
-LOGIN_CANCELLED_URL = '/compendium/'
+LOGIN_CANCELLED_URL = '/'
 
-ACCOUNT_LOGOUT_REDIRECT_URL = '/compendium/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
-ACCOUNT_EMAIL_REQUIRED = True
-
-ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -148,11 +176,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-SOCIALACCOUNT_LOGIN_CANCELLED_URL = '/compendium/'
-
-MEDIA_ROOT = BASE_DIR / 'media'
-
-MEDIA_URL = '/media/'
+SOCIALACCOUNT_LOGIN_CANCELLED_URL = '/'
 
 DEBUG_EMAIL = os.getenv('DEBUG_EMAIL', 'False') == 'True'
 
@@ -168,6 +192,14 @@ else:
 
 SITE_URL = os.getenv('SITE_URL')
 
-cloudinary.config(url=os.environ.get('CLOUDINARY_URL'))
+CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
+if CLOUDINARY_URL:
+    import cloudinary
+    import cloudinary_storage
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    cloudinary.config(url=CLOUDINARY_URL)
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    MEDIA_URL = '/media/'
+else:
+    MEDIA_ROOT = BASE_DIR / 'media'
+    MEDIA_URL = '/media/'
