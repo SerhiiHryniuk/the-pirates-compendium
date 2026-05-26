@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ scenario.title }} — Scenario Sheet</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
+      background-color: #222;
+      color: #ddd;
+      padding: 40px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .header {
+      background-color: #375a7f;
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .badge {
+      background-color: #444;
+      color: #aaa;
+      border-radius: 12px;
+      padding: 4px 12px;
+      font-size: 12px;
+    }
+
+    .card {
+      background-color: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background-color: #303030;
+      border-bottom: 1px solid #444;
+      padding: 10px 18px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #888;
+      font-weight: 700;
+    }
+
+    .card-body {
+      padding: 18px;
+      color: #ddd;
+    }
+
+    .monster-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #3a3a3a;
+      color: #ddd;
+    }
+
+    .monster-item:last-child {
+      border-bottom: none;
+    }
+
+    .monster-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #e74c3c;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .empty {
+      color: #666;
+      font-style: italic;
+    }
+
+    .footer {
+      margin-top: 36px;
+      padding-top: 14px;
+      border-top: 1px solid #444;
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>{{ scenario.title }}</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Description</div>
+    <div class="card-body">{{ scenario.description }}</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Starting Hook</div>
+    <div class="card-body">{{ scenario.starting_hook }}</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Monsters</div>
+    <div class="card-body">
+      {% for monster in scenario.monsters.all %}
+        <div class="monster-item">
+          <span class="monster-dot"></span>
+          <span>{{ monster.name }}</span>
+        </div>
+      {% empty %}
+        <p class="empty">No monsters assigned to this scenario.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="footer">
+    Created by {{ scenario.author.username }} &nbsp;⚓&nbsp; The Pirates Compendium
+  </div>
+
+</body>
+</html>

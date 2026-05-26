@@ -1,0 +1,75 @@
+{% extends "compendium/base.html" %}
+
+{% block title %}Login — The Pirates Compendium{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center py-5">
+  <div class="col-md-6 col-lg-5 col-xl-4">
+    
+    <div class="card border-secondary shadow-lg">
+      <div class="card-header border-secondary text-center py-4">
+        <h3 class="mb-0 text-warning">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Welcome Back
+        </h3>
+      </div>
+      
+      <div class="card-body p-4">
+        
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger py-2 border-danger">
+            {% for error in form.non_field_errors %}
+              <p class="mb-0 small"><i class="bi bi-exclamation-triangle me-1"></i>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form action="{% url 'login' %}" method="post" novalidate>
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ next }}">
+
+          <div class="mb-3">
+            <label for="id_username" class="form-label text-light">Username</label>
+            <input type="text" 
+                   name="username" 
+                   id="id_username" 
+                   class="form-control bg-dark text-light border-secondary {% if form.username.errors %}is-invalid border-danger{% endif %}" 
+                   required autofocus>
+            
+            {% for error in form.username.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-4">
+            <label for="id_password" class="form-label text-light">Password</label>
+            <input type="password" 
+                   name="password" 
+                   id="id_password" 
+                   class="form-control bg-dark text-light border-secondary {% if form.password.errors %}is-invalid border-danger{% endif %}" 
+                   required>
+            
+            {% for error in form.password.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-warning fw-bold">
+              Login
+            </button>
+          </div>
+          
+        </form>
+        <hr class="border-secondary my-4">
+
+        <div class="d-grid">
+          <a href="{% url 'google_login' %}" class="btn btn-outline-light">
+            <i class="bi bi-google me-2"></i>Continue with Google
+          </a>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+{% endblock %}

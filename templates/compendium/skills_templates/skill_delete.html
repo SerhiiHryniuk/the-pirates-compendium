@@ -1,0 +1,41 @@
+{% extends "compendium/base.html" %}
+
+{% block title %}Delete Skill — The Pirates Compendium{% endblock %}
+
+{% block content %}
+
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card border-danger">
+
+        <div class="card-header border-danger bg-transparent">
+          <h4 class="mb-0 text-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>Delete Skill
+          </h4>
+        </div>
+
+        <div class="card-body p-4 text-center">
+          <i class="bi bi-trash fs-1 text-danger mb-3 d-block"></i>
+          <h5 class="text-light mb-2">Are you sure you want to delete</h5>
+          <h4 class="text-warning mb-3">{{ object.name }}</h4>
+          <p class="text-muted small">This action cannot be undone.</p>
+
+          <hr class="border-secondary">
+
+          <form method="post" class="d-flex gap-3 justify-content-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger px-4">
+              <i class="bi bi-trash me-1"></i>Yes, Delete
+            </button>
+            <a href="{% url 'compendium:skill_detail' slug=object.slug %}"
+               class="btn btn-outline-light px-4">
+              <i class="bi bi-x-circle me-1"></i>Cancel
+            </a>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

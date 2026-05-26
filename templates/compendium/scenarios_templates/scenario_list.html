@@ -1,0 +1,126 @@
+{% extends "compendium/base.html" %}
+
+{% block title %}Scenarios — The Pirates Compendium{% endblock %}
+
+{% block content %}
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-warning mb-0">
+      <i class="bi bi-map me-1 text-success"></i>Scenarios
+    </h2>
+    {% if user.is_authenticated %}
+      <a href="{% url 'compendium:scenario_create' %}" class="btn btn-warning btn-sm">
+        <i class="bi bi-plus-circle me-1"></i>Add Scenario
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="card border-secondary mb-5">
+    <div class="card-header border-secondary">
+      <h5 class="mb-0"><i class="bi bi-trophy me-2 text-warning"></i>Most Viewed</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for scenario in top_scenarios %}
+        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent border-secondary">
+          <a href="{% url 'compendium:scenario_detail' slug=scenario.slug %}" class="text-light">
+            {{ scenario.title }}
+          </a>
+          <span class="badge bg-secondary rounded-pill">
+            <i class="bi bi-eye me-1"></i>{{ scenario.view_count }}
+          </span>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted fst-italic bg-transparent border-secondary">
+          No scenarios yet.
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="mb-4">
+    <h5 class="text-warning mb-3">
+      <i class="bi bi-search me-2"></i>Search Scenarios
+    </h5>
+    <input
+      type="text"
+      name="search"
+      class="form-control bg-dark text-light border-secondary"
+      placeholder="Search by title..."
+      hx-get="{% url 'compendium:scenario_search' %}"
+      hx-trigger="keyup changed delay:300ms"
+      hx-target="#scenario-results"
+    >
+  </div>
+
+  <div id="scenario-results">
+    {% if scenario_list %}
+      <div class="row g-3">
+        {% for scenario in scenario_list %}
+          <div class="col-12">
+            <div class="card border-secondary">
+              <div class="card-body d-flex justify-content-between align-items-start">
+
+                <div>
+                  <h6 class="card-title mb-2 text-light">{{ scenario.title }}</h6>
+                </div>
+
+                <div class="d-flex gap-2 flex-shrink-0 ms-3">
+                  <a href="{% url 'compendium:scenario_detail' slug=scenario.slug %}"
+                     class="btn btn-outline-warning btn-sm">
+                    <i class="bi bi-eye me-1"></i>View
+                  </a>
+                  {% if user == scenario.author %}
+                    <a href="{% url 'compendium:scenario_update' slug=scenario.slug %}"
+                       class="btn btn-outline-light btn-sm">
+                      <i class="bi bi-pencil me-1"></i>Edit
+                    </a>
+                    <a href="{% url 'compendium:scenario_delete' slug=scenario.slug %}"
+                       class="btn btn-outline-danger btn-sm">
+                      <i class="bi bi-trash me-1"></i>Delete
+                    </a>
+                  {% endif %}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <nav class="mt-4">
+        <ul class="pagination pagination-sm justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link bg-dark text-light border-secondary" href="?page=1">First</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link bg-dark text-light border-secondary"
+                 href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+          {% endif %}
+
+          <li class="page-item disabled">
+            <span class="page-link bg-dark text-warning border-secondary">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+          </li>
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link bg-dark text-light border-secondary"
+                 href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link bg-dark text-light border-secondary"
+                 href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+
+    {% else %}
+      <p class="text-muted fst-italic">No scenarios found.</p>
+    {% endif %}
+  </div>
+
+{% endblock %}
