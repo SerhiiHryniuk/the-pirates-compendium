@@ -1,3 +1,5 @@
+import os
+
 from django import forms
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
@@ -78,7 +80,7 @@ class ScenarioCreateView(
             f"Starting Hook:\n{scenario.starting_hook}\n\n"
             f"View it here: {settings.SITE_URL}/compendium/scenario/{scenario.slug}/"
         )
-        from_email = "no-reply@pirates-compendium.com"
+        from_email = os.getenv('GMAIL_SENDER_EMAIL')
         email_tuples = tuple(
             (subject, message, from_email, [email]) for email in emails
         )

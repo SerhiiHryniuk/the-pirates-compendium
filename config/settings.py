@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary',
     'compendium',
+    'gmailapi_backend',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -184,12 +185,10 @@ DEBUG_EMAIL = os.getenv('DEBUG_EMAIL', 'False') == 'True'
 if DEBUG_EMAIL:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+    EMAIL_BACKEND = 'gmailapi_backend.mail.GmailBackend'
+    GMAIL_API_CLIENT_ID = os.getenv('GMAIL_API_CLIENT_ID')
+    GMAIL_API_CLIENT_SECRET = os.getenv('GMAIL_API_CLIENT_SECRET')
+    GMAIL_API_REFRESH_TOKEN = os.getenv('GMAIL_API_REFRESH_TOKEN')
 
 SITE_URL = os.getenv('SITE_URL')
 
