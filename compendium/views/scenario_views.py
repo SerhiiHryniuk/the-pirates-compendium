@@ -78,7 +78,7 @@ class ScenarioCreateView(
             f"Title: {scenario.title}\n\n"
             f"Description:\n{scenario.description}\n\n"
             f"Starting Hook:\n{scenario.starting_hook}\n\n"
-            f"View it here: {settings.SITE_URL}/compendium/scenario/{scenario.slug}/"
+            f"View it here: {settings.SITE_URL}/scenario/{scenario.slug}/"
         )
         from_email = os.getenv('GMAIL_SENDER_EMAIL')
         email_tuples = tuple(
